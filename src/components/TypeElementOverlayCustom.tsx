@@ -8,6 +8,7 @@ interface Props {
   attributes: DraggableAttributes;
   setNodeRef: (element: HTMLElement | null) => void;
   style: React.CSSProperties;
+  isOver: boolean;
 }
 const TypeElementOverlayCustom = ({
   children,
@@ -16,13 +17,16 @@ const TypeElementOverlayCustom = ({
   style,
   isDragging,
   setNodeRef,
+  isOver,
 }: Props) => {
   const draggingStyle = isDragging ? "relative z-10 shadow-md" : undefined;
+  const draggedOverDroppableStyle =
+    isOver && isDragging ? "opacity-0" : undefined;
 
   return (
     <li className={isDragging ? "relative" : undefined}>
       <div
-        className={`${draggingStyle} transition-colors bg-blue-600 text-white p-2 rounded-md flex  items-center gap-1 cursor-pointer hover:bg-blue-400`}
+        className={`${draggingStyle} ${draggedOverDroppableStyle} transition-colors bg-blue-600 text-white p-2 rounded-md flex  items-center gap-1 cursor-pointer hover:bg-blue-400`}
         style={style}
         ref={setNodeRef}
         {...attributes}

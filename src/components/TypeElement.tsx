@@ -25,9 +25,6 @@ const TypeElement = ({ icon, name }: Props) => {
   const { attributes, listeners, setNodeRef, transform, over } = useDraggable({
     id: ownType.id,
   });
-
-  console.log("over:" + over);
-
   const style: React.CSSProperties = {
     transform: transform
       ? `translate3d(${transform?.x}px, ${transform?.y}px, 0)`
@@ -37,12 +34,17 @@ const TypeElement = ({ icon, name }: Props) => {
     <TypeElementOverlayCustom
       setNodeRef={setNodeRef}
       isDragging={transform !== null}
+      isOver={over !== null}
       attributes={attributes}
       listeners={listeners}
       style={style}
     >
-      <Icon icon={icon} />
-      <span className="pl-1 border-l">{name}</span>
+      {
+        <>
+          <Icon icon={icon} />
+          <span className="pl-1 border-l">{name}</span>
+        </>
+      }
     </TypeElementOverlayCustom>
   );
 };
