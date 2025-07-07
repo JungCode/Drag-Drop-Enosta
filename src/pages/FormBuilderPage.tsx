@@ -1,12 +1,11 @@
+import EditableElementsList from "../components/EditableElementsList";
 import SideBar from "../components/SideBar";
 
 const FormBuilderPage = () => {
   return (
-    <div className="flex bg-gray-100 h-screen">
+    <div className="bg-gray-100 h-screen">
       <SideBar />
-      <div className="pl-52">
-        <div>EditableElementsList</div>
-      </div>
+      <EditableElementsList />
     </div>
   );
 };
