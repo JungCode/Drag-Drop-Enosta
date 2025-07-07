@@ -1,20 +1,39 @@
 import { useDroppable } from "@dnd-kit/core";
-import EditableElement from "./EditableElement";
+import SortableElementsList from "./SortableElementsList";
 
-const EditableElementsList = () => {
-  const { isOver, setNodeRef } = useDroppable({
+interface Props {
+  idList: string[];
+  OverFormBuilderElementId: string | null;
+  activeIdElement: string | null;
+}
+
+const EditableElementsList = ({
+  idList,
+  OverFormBuilderElementId,
+  activeIdElement,
+}: Props) => {
+  const { setNodeRef } = useDroppable({
     id: "droppable",
   });
+
+  const isActivedItemFromOutSide =
+    activeIdElement && !idList.includes(activeIdElement);
+  if (isActivedItemFromOutSide && OverFormBuilderElementId !== null) {
+    idList = [...idList, activeIdElement as string];
+  }
+
   return (
     <div className="ml-52 px-52 min-h-screen h-full py-5">
       <ul
-        style={{ backgroundColor: isOver ? "red" : undefined }}
         ref={setNodeRef}
-        className="bg-white h-full p-6 shadow-xl rounded-xl flex flex-col gap-2"
+        className="bg-white h-full p-6 shadow-xl rounded-xl "
       >
-        <EditableElement />
-        <EditableElement />
-        <EditableElement />
+        <SortableElementsList
+          items={idList}
+          isSideBarItem={!!isActivedItemFromOutSide}
+          OverFormBuilderElementId={OverFormBuilderElementId}
+          activeIdElement={activeIdElement}
+        />
       </ul>
     </div>
   );

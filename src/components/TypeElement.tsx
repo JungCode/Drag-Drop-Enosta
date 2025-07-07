@@ -11,15 +11,16 @@ type TypeElement = {
 interface Props {
   icon: string;
   name: string;
+  isOverFormBuilder: boolean;
 }
 
-const TypeElement = ({ icon, name }: Props) => {
+const TypeElement = ({ icon, name, isOverFormBuilder }: Props) => {
   const ownType: TypeElement = useMemo(
     () => ({
       id: name + Date.now().toString(),
       type: name.toLowerCase() as TypeElement["type"],
     }),
-    []
+    [isOverFormBuilder]
   );
 
   const { attributes, listeners, setNodeRef, transform, over } = useDraggable({
