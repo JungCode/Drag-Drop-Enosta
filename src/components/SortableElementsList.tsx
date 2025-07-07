@@ -15,7 +15,6 @@ const SortableElementsList = ({
   OverFormBuilderElementId,
   activeIdElement,
 }: Props) => {
-  console.log(isSideBarItem);
   return (
     <div className="flex flex-col gap-2">
       <SortableContext items={items as string[]}>
@@ -23,11 +22,11 @@ const SortableElementsList = ({
           <EditableElement key={id} id={id as string}></EditableElement>
         ))}
         <DragOverlay>
+          {/* Create overlay whenenver the element is not locate at sidebar element (dragging over form builder),
+          we only use this overlay for re-arrange because we already got TypeElementOverlayCustom 
+          for TypeElement within a difference style */}
           {!isSideBarItem || OverFormBuilderElementId ? (
             <EditableElement
-              isItemFromSidebar={
-                !items.includes(OverFormBuilderElementId as string)
-              }
               isOverLay={true}
               isSideBarItem={isSideBarItem}
               id={activeIdElement}

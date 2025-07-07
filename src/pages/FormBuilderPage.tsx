@@ -38,6 +38,9 @@ const FormBuilderPage = () => {
       if (currIndex === -1 && OverFormBuilderElementId !== null) {
         setEditableElementsId([...editableElementsId, active.id as string]);
       }
+      // TODO: change on local storage
+      console.log([...editableElementsId, active.id as string]);
+
       return;
     }
 
@@ -54,10 +57,12 @@ const FormBuilderPage = () => {
         ...editableElementsId.slice(newIndex),
       ];
 
-      // Else just swap 2 elements
+      // Else just swap 2 elements (re-arrange)
     } else {
       movedArray = arrayMove(editableElementsId, oldIndex, newIndex);
     }
+    // TODO: change on local storage
+    console.log(movedArray);
 
     setEditableElementsId(movedArray);
   }
@@ -86,7 +91,7 @@ const FormBuilderPage = () => {
       >
         <SideBar isOverFormBuilder={OverFormBuilderElementId !== null} />
         <EditableElementsList
-          idList={editableElementsId}
+          idsList={editableElementsId}
           activeIdElement={activeIdElement}
           OverFormBuilderElementId={OverFormBuilderElementId}
         />

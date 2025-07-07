@@ -2,13 +2,13 @@ import { useDroppable } from "@dnd-kit/core";
 import SortableElementsList from "./SortableElementsList";
 
 interface Props {
-  idList: string[];
+  idsList: string[];
   OverFormBuilderElementId: string | null;
   activeIdElement: string | null;
 }
 
 const EditableElementsList = ({
-  idList,
+  idsList,
   OverFormBuilderElementId,
   activeIdElement,
 }: Props) => {
@@ -16,10 +16,15 @@ const EditableElementsList = ({
     id: "droppable",
   });
 
-  const isActivedItemFromOutSide =
-    activeIdElement && !idList.includes(activeIdElement);
+  const isActivedItemFromOutSide = !!(
+    activeIdElement && !idsList.includes(activeIdElement)
+  );
+
+  // Check if item is draged from side bar to form builder then create a ghost list
+  // if it's not then the user just re-arranges the elements
+  let ghostIdsList: string[] = idsList;
   if (isActivedItemFromOutSide && OverFormBuilderElementId !== null) {
-    idList = [...idList, activeIdElement as string];
+    ghostIdsList = [...idsList, activeIdElement as string];
   }
 
   return (
@@ -29,8 +34,8 @@ const EditableElementsList = ({
         className="bg-white h-full p-6 shadow-xl rounded-xl "
       >
         <SortableElementsList
-          items={idList}
-          isSideBarItem={!!isActivedItemFromOutSide}
+          items={ghostIdsList}
+          isSideBarItem={isActivedItemFromOutSide}
           OverFormBuilderElementId={OverFormBuilderElementId}
           activeIdElement={activeIdElement}
         />

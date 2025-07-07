@@ -2,11 +2,7 @@ import { Icon } from "@iconify/react";
 import { useDraggable } from "@dnd-kit/core";
 import { useMemo } from "react";
 import TypeElementOverlayCustom from "./TypeElementOverlayCustom";
-
-type TypeElement = {
-  id: string;
-  type: "heading" | "input" | "button" | "select" | "image";
-};
+import type { KindOfElementType } from "../types/types";
 
 interface Props {
   icon: string;
@@ -15,11 +11,14 @@ interface Props {
 }
 
 const TypeElement = ({ icon, name, isOverFormBuilder }: Props) => {
-  const ownType: TypeElement = useMemo(
+  // Use useMemo to not to re-render therefore we can drag it normally
+  const ownType: KindOfElementType = useMemo(
     () => ({
       id: name + Date.now().toString(),
-      type: name.toLowerCase() as TypeElement["type"],
+      type: name.toLowerCase() as KindOfElementType["type"],
     }),
+    // Re-create the id whenever TypeElement is dropped or just move into form builder
+    // because this id will be use for editable element so we don't want to dupplicate.
     [isOverFormBuilder]
   );
 
@@ -34,8 +33,7 @@ const TypeElement = ({ icon, name, isOverFormBuilder }: Props) => {
   return (
     <TypeElementOverlayCustom
       setNodeRef={setNodeRef}
-      isDragging={transform !== null}
-      isOver={over !== null}
+      isDragged={transform !== null}
       attributes={attributes}
       listeners={listeners}
       style={style}

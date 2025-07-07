@@ -3,30 +3,26 @@ import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 
 interface Props {
   children: React.ReactNode;
-  isDragging: boolean;
+  isDragged: boolean;
   listeners: SyntheticListenerMap | undefined;
   attributes: DraggableAttributes;
   setNodeRef: (element: HTMLElement | null) => void;
   style: React.CSSProperties;
-  isOver: boolean;
 }
 const TypeElementOverlayCustom = ({
   children,
   attributes,
   listeners,
   style,
-  isDragging,
+  isDragged,
   setNodeRef,
-  isOver,
 }: Props) => {
-  const draggingStyle = isDragging ? "relative z-10 shadow-md" : undefined;
-  const draggedOverDroppableStyle =
-    isOver && isDragging ? "opacity-0" : undefined;
+  const draggingStyle = isDragged ? "relative z-10 shadow-md" : undefined;
 
   return (
-    <li className={isDragging ? "relative" : undefined}>
+    <li className={isDragged ? "relative" : undefined}>
       <div
-        className={`${draggingStyle} ${draggedOverDroppableStyle} transition-colors bg-blue-600 text-white p-2 rounded-md flex  items-center gap-1 cursor-pointer hover:bg-blue-400`}
+        className={`${draggingStyle} transition-colors bg-blue-600 text-white p-2 rounded-md flex  items-center gap-1 cursor-pointer hover:bg-blue-400`}
         style={style}
         ref={setNodeRef}
         {...attributes}
@@ -34,7 +30,8 @@ const TypeElementOverlayCustom = ({
       >
         {children}
       </div>
-      {isDragging && (
+      {/* Show the overlay at the started position when the element is dragged out  */}
+      {isDragged && (
         <div className="absolute top-0 bottom-0 transition-colors bg-blue-600 z-0 opacity-40 text-white p-2 rounded-md flex  items-center gap-1 cursor-pointer hover:bg-blue-400 w-full">
           {children}
         </div>

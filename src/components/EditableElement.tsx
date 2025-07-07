@@ -5,7 +5,6 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 interface Props {
   id: string | null;
   isOverLay?: boolean;
-  isItemFromSidebar?: boolean;
   isSideBarItem?: boolean;
 }
 const EditableElement = ({
@@ -37,6 +36,7 @@ const EditableElement = ({
       {...listeners}
       className="opacity-60 p-10 rounded-md text-xl text-center border border-dashed border-gray-400 hover:border-black hover:opacity-100 cursor-pointer bg-white"
     >
+      {/* Turn into drag icons when the element came from sidebar */}
       {isSideBarItem ? <Icon icon="fluent:drag-24-filled" /> : id}
     </li>
   );
