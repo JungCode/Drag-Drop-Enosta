@@ -1,5 +1,7 @@
+import FormBuilderPage from "./pages/FormBuilderPage";
+
 function App() {
-  return <div className="text-3xl font-bold underline">Hello wolrd</div>;
+  return <FormBuilderPage />;
 }
 
 export default App;
