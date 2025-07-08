@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import EditableWrapper from "./EditableWrapper";
-
-type ButtonType = "button" | "submit" | "reset";
-type ButtonPosition = "left" | "center" | "right";
+import type { ButtonType, PositionType } from "../../types/ElementTypes";
 
 export interface ButtonProps {
   id: string;
   content?: string;
   name?: string;
   type?: ButtonType;
-  position?: ButtonPosition;
+  position?: PositionType;
   canEdit?: boolean;
   onSave?: (updated: ButtonProps) => void;
   onDelete?: () => void;
@@ -105,7 +103,7 @@ const ButtonElement: React.FC<ButtonProps> = ({
             <label className="text-sm font-medium text-gray-700 mb-1">Align</label>
             <select
               value={values.position}
-              onChange={(e) => handleChange("position", e.target.value as ButtonPosition)}
+              onChange={(e) => handleChange("position", e.target.value as PositionType)}
               className="px-3 py-2 border rounded-md"
             >
               <option value="left">left</option>

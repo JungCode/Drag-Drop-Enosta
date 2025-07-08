@@ -88,17 +88,13 @@ const SelectElement: React.FC<SelectProps> = ({
     setValues(backup);
   };
 
-  const getPositionClass = () => {
-    switch (values.position) {
-      case "center":
-        return "mx-auto";
-      case "right":
-        return "ml-auto";
-      default:
-        return "";
-    }
-  };
-
+  const positionClass =
+    values.position === "center"
+      ? "justify-center"
+      : values.position === "right"
+      ? "justify-end"
+      : "justify-start";
+      
   const renderEditView = (
     <>
       <div className="grid grid-cols-2 gap-4 mb-4">
@@ -169,7 +165,7 @@ const SelectElement: React.FC<SelectProps> = ({
             onChange={handleChange}
             className="w-full border border-gray-300 rounded px-3 py-2"
           >
-            {["100%", "90%", "75%", "50%", "33%", "25%"].map((w) => (
+            {["100%", "90%", "80%", "70%", "60%", "50%", "40%", "30%", "20%", "10%"].map((w) => (
               <option key={w} value={w}>{w}</option>
             ))}
           </select>
@@ -208,7 +204,7 @@ const SelectElement: React.FC<SelectProps> = ({
   );
 
   const preview = (
-    <div className={`space-y-1 p-2 ${getPositionClass()}`}>
+    <div className={`space-y-1 p-2 ${positionClass}`}>
       {values.title && (
         <label className="block text-sm font-medium text-gray-700 mb-1">
           {values.title}

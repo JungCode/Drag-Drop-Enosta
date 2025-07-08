@@ -10,7 +10,6 @@ export const ELEMENT_TYPES = {
 
 export type ElementType = keyof typeof ELEMENT_TYPES;
 
-
 export interface SelectOption {
   id: string;
   value: string;

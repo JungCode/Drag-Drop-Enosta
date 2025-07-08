@@ -47,7 +47,6 @@ const EditableWrapper: React.FC<EditableWrapperProps> = ({
     transform,
     transition,
     isDragging,
-    active,
   } = useSortable({ id });
 
   const style = {
@@ -109,7 +108,7 @@ const EditableWrapper: React.FC<EditableWrapperProps> = ({
       onDoubleClick={() => {
         if (canEdit) setIsEditing(true);
       }}
-      className={`relative p-2 rounded border transition-colors duration-300 border-dashed ${
+      className={`relative p-2 rounded border transition-colors duration-300 border-dashed flex flex-col justify-center ${
         canEdit && "min-h-28"
       }
        flex flex-col justify-center ${
@@ -121,28 +120,6 @@ const EditableWrapper: React.FC<EditableWrapperProps> = ({
       {...listeners}
     >
       {children}
-      {isHovered && canEdit && !isEditing && (
-        <div className="absolute top-1 right-1 flex gap-1 z-10">
-          <button
-            onDoubleClick={() => {
-              setIsEditing(true);
-              console.log("edit");
-            }}
-            className="bg-white p-1 rounded shadow hover:bg-blue-100 transition"
-          >
-            <Icon icon="mdi:pencil-outline" className="text-blue-600 text-lg" />
-          </button>
-          <button
-            onDoubleClick={onDelete}
-            className="bg-white p-1 rounded shadow hover:bg-red-100 transition"
-          >
-            <Icon
-              icon="mdi:trash-can-outline"
-              className="text-red-600 text-lg"
-            />
-          </button>
-        </div>
-      )}
     </div>
   );
 };

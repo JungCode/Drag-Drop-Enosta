@@ -30,7 +30,7 @@ const RenderElemment = ({
       try {
         const parsed = JSON.parse(saved) as ElementItem[];
         let newElements = parsed;
-        if (parsed.length !== items.length) {
+        if (parsed.length !== items.length && items.length > 0) {
           const newItemId = items[items.length - 1];
           newElements = [
             ...parsed,

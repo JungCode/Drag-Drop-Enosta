@@ -215,19 +215,15 @@ const InputElement: React.FC<InputProps> = ({
     </div>
   );
 
-  const getPositionClass = () => {
-    switch (values.position) {
-      case "center":
-        return "mx-auto";
-      case "right":
-        return "ml-auto";
-      default:
-        return "";
-    }
-  };
+  const positionClass =
+    values.position === "center"
+      ? "justify-center"
+      : values.position === "right"
+      ? "justify-end"
+      : "justify-start";
 
   const preview = (
-    <div className={`space-y-1 p-2 ${getPositionClass()}`}>
+    <div className={`space-y-1 p-2 ${positionClass}`}>
       {values.title && (
         <label className="block text-sm font-medium text-gray-700">
           {values.title}
