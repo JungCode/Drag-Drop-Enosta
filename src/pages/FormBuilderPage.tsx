@@ -9,6 +9,7 @@ import SideBar from "../components/SideBar";
 import { useEffect, useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 import type { ElementItem } from "../types/ElementTypes";
+import { syncElementsWithLocalStorage } from "../ultis/storage";
 
 const FormBuilderPage = () => {
   // Initiate 2 example elements id
@@ -21,9 +22,13 @@ const FormBuilderPage = () => {
 
   // Fetch data at the first time reload
   useEffect(() => {
-    const saved = localStorage.getItem("elements");
-    const oldElements = saved ? JSON.parse(saved) : [];
-    setEditableElementsId(oldElements.map((el: ElementItem) => el.id));
+    const savedElements = localStorage.getItem("elements");
+    const parsedElements: ElementItem[] = savedElements
+      ? JSON.parse(savedElements)
+      : [];
+
+    const elementIds = parsedElements.map((el) => el.id);
+    setEditableElementsId(elementIds);
   }, []);
 
   // ------ UI animation Functions ------
@@ -42,31 +47,10 @@ const FormBuilderPage = () => {
       // therefore the (active.id === over.id) -> (true) is happended
       if (currIndex === -1 && OverFormBuilderElementId !== null) {
         setEditableElementsId([...editableElementsId, active.id as string]);
-        const listId = [...editableElementsId, active.id as string];
-
-        const saved = localStorage.getItem("elements");
-        const oldElements = saved ? JSON.parse(saved) : [];
-
-        const elementMap = new Map<string, ElementItem>();
-        oldElements.forEach((el: ElementItem) => {
-          elementMap.set(el.id, el);
-        });
-
-        const updatedElements = listId.map((id) => {
-          if (elementMap.has(id)) {
-            return elementMap.get(id);
-          }
-
-          const type = id.split("-")[0];
-
-          return {
-            id,
-            type,
-            data: {},
-          };
-        });
-
-        localStorage.setItem("elements", JSON.stringify(updatedElements));
+        syncElementsWithLocalStorage([
+          ...editableElementsId,
+          active.id as string,
+        ]);
       }
 
       return;
@@ -89,34 +73,9 @@ const FormBuilderPage = () => {
     } else {
       movedArray = arrayMove(editableElementsId, oldIndex, newIndex);
     }
-    // TODO: change on local storage
-    const saved = localStorage.getItem("elements");
-    const oldElements = saved ? JSON.parse(saved) : [];
-
-    const elementMap = new Map<string, ElementItem>();
-    oldElements.forEach((el: ElementItem) => {
-      elementMap.set(el.id, el);
-    });
-
-    const updatedElements = movedArray.map((id) => {
-      if (elementMap.has(id)) {
-        return elementMap.get(id);
-      }
-
-      const type = id.split("-")[0];
-
-      return {
-        id,
-        type,
-        data: {},
-      };
-    });
-
-    localStorage.setItem("elements", JSON.stringify(updatedElements));
-
+    syncElementsWithLocalStorage(movedArray);
     setEditableElementsId(movedArray);
   }
-  // }
 
   function handleOnDragStart(event: DragStartEvent) {
     setActiveIdElement(event.active.id as string);
@@ -145,6 +104,7 @@ const FormBuilderPage = () => {
           idsList={editableElementsId}
           activeIdElement={activeIdElement}
           OverFormBuilderElementId={OverFormBuilderElementId}
+          setEditableElementsId={setEditableElementsId}
         />
       </DndContext>
     </div>

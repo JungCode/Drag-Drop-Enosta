@@ -8,11 +8,11 @@ export interface HeadingData {
   name?: string;
   position?: "left" | "center" | "right";
   color?: string;
-  canEdit?: boolean;
   id: string;
 }
 
 interface HeadingProps extends HeadingData {
+  canEdit?: boolean;
   onSave?: (updated: HeadingData) => void;
   onDelete?: () => void;
 }
@@ -23,37 +23,27 @@ const HeadingElement: React.FC<HeadingProps> = ({
   name = "title",
   position = "left",
   color = "#000000",
+  id,
   canEdit = false,
   onSave,
   onDelete,
-  id
 }) => {
-  const [values, setValues] = useState({
-    title,
-    size,
-    name,
-    position,
-    color,
-    id
-  });
-
-  const [backup, setBackup] = useState({
-    title,
-    size,
-    name,
-    position,
-    color,
-    id
-  });
-
-  // console.log('id', id)
+  const initial = { title, size, name, position, color, id };
+  const [values, setValues] = useState<HeadingData>(initial);
+  const [backup, setBackup] = useState<HeadingData>(initial);
 
   const handleChange = (
-    key: keyof typeof values,
-    value: string | number | undefined
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    setValues((prev) => ({ ...prev, [key]: value }));
+    const { name, value } = e.target;
+
+    if (name === "size") {
+      setValues((prev) => ({ ...prev, size: Number(value) as HeadingData["size"] }));
+    } else {
+      setValues((prev) => ({ ...prev, [name]: value }));
+    }
   };
+
 
   const handleSave = () => {
     setBackup(values);
@@ -80,81 +70,89 @@ const HeadingElement: React.FC<HeadingProps> = ({
 
   const Tag = `h${values.size}` as keyof JSX.IntrinsicElements;
 
+  const editView = (
+    <div className="grid grid-cols-2 gap-4">
+      {/* Title */}
+      <div>
+        <label className="block text-sm font-medium mb-1">Heading Text</label>
+        <input
+          name="title"
+          value={values.title}
+          onChange={handleChange}
+          className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+        />
+      </div>
+
+      {/* Size */}
+      <div>
+        <label className="block text-sm font-medium mb-1">Size</label>
+        <select
+          name="size"
+          value={values.size}
+          onChange={handleChange}
+          className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+        >
+          {[1, 2, 3, 4, 5].map((s) => (
+            <option key={s} value={s}>
+              Heading {s}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Name */}
+      <div>
+        <label className="block text-sm font-medium mb-1">Name</label>
+        <input
+          name="name"
+          value={values.name}
+          onChange={handleChange}
+          className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+        />
+      </div>
+
+      {/* Position */}
+      <div>
+        <label className="block text-sm font-medium mb-1">Position</label>
+        <select
+          name="position"
+          value={values.position}
+          onChange={handleChange}
+          className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+        >
+          <option value="left">Left</option>
+          <option value="center">Center</option>
+          <option value="right">Right</option>
+        </select>
+      </div>
+
+      {/* Color */}
+      <div>
+        <label className="block text-sm font-medium mb-1">Color</label>
+        <input
+          type="color"
+          name="color"
+          value={values.color}
+          onChange={handleChange}
+          className="w-20 h-10 border-none"
+        />
+      </div>
+    </div>
+  );
+
   return (
     <EditableWrapper
+      id={values.id}
       canEdit={canEdit}
       onSave={handleSave}
-      onDelete={onDelete}
       onDiscard={handleDiscard}
+      onDelete={onDelete}
       position={values.position}
-      id={values.id}
-      editView={
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Heading Text</label>
-            <input
-              value={values.title}
-              onChange={(e) => handleChange("title", e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Size</label>
-            <select
-              value={values.size}
-              onChange={(e) =>
-                handleChange("size", Number(e.target.value) as 1 | 2 | 3 | 4 | 5)
-              }
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-            >
-              {[1, 2, 3, 4, 5].map((s) => (
-                <option key={s} value={s}>
-                  Size {s}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Name</label>
-            <input
-              value={values.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Position</label>
-            <select
-              value={values.position}
-              onChange={(e) =>
-                handleChange("position", e.target.value as "left" | "center" | "right")
-              }
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-            >
-              <option value="left">Left</option>
-              <option value="center">Center</option>
-              <option value="right">Right</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Color</label>
-            <input
-              type="color"
-              value={values.color}
-              onChange={(e) => handleChange("color", e.target.value)}
-              className="w-20 h-10 border-none"
-            />
-          </div>
-        </div>
-      }
+      editView={editView}
     >
       <Tag
         style={{ color: values.color }}
-        className={`font-bold ${sizeClasses[values.size]} ${positionClasses[values.position]} w-full`}
+        className={`font-bold ${sizeClasses[values.size || 2]} ${positionClasses[values.position || 'left']} w-full`}
         {...(values.name ? { name: values.name } : {})}
       >
         {values.title}

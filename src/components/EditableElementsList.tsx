@@ -5,12 +5,14 @@ interface Props {
   idsList: string[];
   OverFormBuilderElementId: string | null;
   activeIdElement: string | null;
+  setEditableElementsId: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 const EditableElementsList = ({
   idsList,
   OverFormBuilderElementId,
   activeIdElement,
+  setEditableElementsId
 }: Props) => {
   const { setNodeRef } = useDroppable({
     id: "droppable",
@@ -40,6 +42,7 @@ const EditableElementsList = ({
           isSideBarItem={isActivedItemFromOutSide}
           OverFormBuilderElementId={OverFormBuilderElementId}
           activeIdElement={activeIdElement}
+          setEditableElementsId={setEditableElementsId}
         />
       </ul>
     </div>

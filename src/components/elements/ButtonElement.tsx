@@ -4,23 +4,19 @@ import EditableWrapper from "./EditableWrapper";
 type ButtonType = "button" | "submit" | "reset";
 type ButtonPosition = "left" | "center" | "right";
 
-interface ButtonProps {
+export interface ButtonProps {
+  id: string;
   content?: string;
   name?: string;
   type?: ButtonType;
   position?: ButtonPosition;
   canEdit?: boolean;
-  onSave?: (updated: {
-    content?: string;
-    name?: string;
-    type?: ButtonType;
-    position?: ButtonPosition;
-  }) => void;
+  onSave?: (updated: ButtonProps) => void;
   onDelete?: () => void;
-  id: string
 }
 
 const ButtonElement: React.FC<ButtonProps> = ({
+  id,
   content = "Button",
   name = "submitButton",
   type = "submit",
@@ -28,19 +24,18 @@ const ButtonElement: React.FC<ButtonProps> = ({
   canEdit = false,
   onSave,
   onDelete,
-  id
 }) => {
-  const [values, setValues] = useState({
+  const [values, setValues] = useState<ButtonProps>({
+    id,
     content,
     name,
     type,
     position,
-    id
   });
 
   const [backup, setBackup] = useState({ ...values });
 
-  const handleChange = (key: keyof typeof values, value: string) => {
+  const handleChange = <K extends keyof ButtonProps>(key: K, value: ButtonProps[K]) => {
     setValues((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -73,31 +68,31 @@ const ButtonElement: React.FC<ButtonProps> = ({
         <div className="grid grid-cols-2 gap-4">
           {/* Button Label */}
           <div className="flex flex-col">
-            <label className="text-sm font-medium text-gray-700 mb-1">Button Label</label>
+            <label className="text-sm font-medium text-gray-700 mb-1">Label</label>
             <input
               value={values.content}
               onChange={(e) => handleChange("content", e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md"
+              className="px-3 py-2 border rounded-md"
             />
           </div>
 
           {/* Button Name */}
           <div className="flex flex-col">
-            <label className="text-sm font-medium text-gray-700 mb-1">Button Name</label>
+            <label className="text-sm font-medium text-gray-700 mb-1">Name</label>
             <input
               value={values.name}
               onChange={(e) => handleChange("name", e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md"
+              className="px-3 py-2 border rounded-md"
             />
           </div>
 
           {/* Button Type */}
           <div className="flex flex-col">
-            <label className="text-sm font-medium text-gray-700 mb-1">Button Type</label>
+            <label className="text-sm font-medium text-gray-700 mb-1">Type</label>
             <select
               value={values.type}
-              onChange={(e) => handleChange("type", e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md"
+              onChange={(e) => handleChange("type", e.target.value as ButtonType)}
+              className="px-3 py-2 border rounded-md"
             >
               {/* <option value="button">button</option> */}
               <option value="submit">submit</option>
@@ -107,11 +102,11 @@ const ButtonElement: React.FC<ButtonProps> = ({
 
           {/* Button Align */}
           <div className="flex flex-col">
-            <label className="text-sm font-medium text-gray-700 mb-1">Button Align</label>
+            <label className="text-sm font-medium text-gray-700 mb-1">Align</label>
             <select
               value={values.position}
-              onChange={(e) => handleChange("position", e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md"
+              onChange={(e) => handleChange("position", e.target.value as ButtonPosition)}
+              className="px-3 py-2 border rounded-md"
             >
               <option value="left">left</option>
               <option value="center">center</option>

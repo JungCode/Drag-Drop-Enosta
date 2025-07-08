@@ -1,13 +1,14 @@
 import { SortableContext } from "@dnd-kit/sortable";
 import { DragOverlay } from "@dnd-kit/core";
-import Create from "../pages/Create";
 import EditableElementOverlay from "./EditableElementOverlay";
+import RenderElemment from "./elements/RenderElements";
 
 interface Props {
   items: string[];
   isSideBarItem: boolean;
   OverFormBuilderElementId: string | null;
   activeIdElement: string | null;
+  setEditableElementsId: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 const SortableElementsList = ({
@@ -15,12 +16,13 @@ const SortableElementsList = ({
   isSideBarItem,
   OverFormBuilderElementId,
   activeIdElement,
+  setEditableElementsId
 }: Props) => {
   // console.log('items', items)
   return (
     <div className="flex flex-col gap-2">
       <SortableContext items={items as string[]}>
-        <Create items={items} />
+        <RenderElemment items={items} setEditableElementsId={setEditableElementsId}/>
         <DragOverlay>
           {/* Create overlay whenenver the element is not locate at sidebar element (dragging over form builder),
           we only use this overlay for re-arrange because we already got TypeElementOverlayCustom 

@@ -27,11 +27,11 @@ interface SelectProps {
 }
 
 const SelectElement: React.FC<SelectProps> = ({
+  id,
   data = {},
+  canEdit = false,
   onSave,
   onDelete,
-  canEdit = false,
-  id
 }) => {
   const initialData: SelectData = {
     name: "select",
@@ -42,7 +42,7 @@ const SelectElement: React.FC<SelectProps> = ({
     position: "left",
     options: [],
     ...data,
-  };  
+  };
   const [values, setValues] = useState<SelectData>(initialData);
   const [backup, setBackup] = useState<SelectData>(initialData);
 
@@ -90,9 +90,12 @@ const SelectElement: React.FC<SelectProps> = ({
 
   const getPositionClass = () => {
     switch (values.position) {
-      case "center": return "mx-auto";
-      case "right": return "ml-auto";
-      default: return "";
+      case "center":
+        return "mx-auto";
+      case "right":
+        return "ml-auto";
+      default:
+        return "";
     }
   };
 

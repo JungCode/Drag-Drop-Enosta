@@ -8,7 +8,10 @@ import type { ButtonData, ElementItem, InputData } from "../types/ElementTypes";
 
 const Preview = () => {
   const [elements, setElements] = useState<ElementItem[]>([]);
-  const [submittedData, setSubmittedData] = useState<Record<string, FormDataEntryValue> | null>(null);
+  const [submittedData, setSubmittedData] = useState<Record<
+    string,
+    FormDataEntryValue
+  > | null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem("elements");
@@ -25,7 +28,14 @@ const Preview = () => {
   const renderElement = (item: ElementItem) => {
     switch (item.type) {
       case "Heading":
-        return <HeadingElement id={item.id} key={item.id} {...item.data} canEdit={false} />;
+        return (
+          <HeadingElement
+            id={item.id}
+            key={item.id}
+            {...item.data}
+            canEdit={false}
+          />
+        );
       case "Input":
         return (
           <InputElement
@@ -61,7 +71,12 @@ const Preview = () => {
         );
       case "Image":
         return (
-          <ImageElement id={item.id} key={item.id} canEdit={false} {...(item.data || {})} />
+          <ImageElement
+            id={item.id}
+            key={item.id}
+            canEdit={false}
+            {...(item.data || {})}
+          />
         );
       default:
         return null;
@@ -77,11 +92,7 @@ const Preview = () => {
   };
 
   return (
-    // <div className="max-w-3xl mx-auto p-6">
-        <div className="m-16 max-w-7xl mx-auto">
-
-      {/* <h1 className="text-2xl font-bold mb-4">Preview Page</h1> */}
-
+    <div className="m-16 max-w-7xl mx-auto">
       <form onSubmit={handleSubmit} className="space-y-1">
         {elements.map((item) => renderElement(item))}
       </form>

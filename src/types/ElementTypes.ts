@@ -1,5 +1,15 @@
-export type ElementType = "Heading" | "Input" | "Button" | "Image" | "Selection";
 export type PositionType = "left" | "center" | "right";
+
+export const ELEMENT_TYPES = {
+  Heading: "Heading",
+  Input: "Input",
+  Button: "Button",
+  Image: "Image",
+  Selection: "Selection",
+} as const;
+
+export type ElementType = keyof typeof ELEMENT_TYPES;
+
 
 export interface SelectOption {
   id: string;

@@ -17,18 +17,32 @@ interface InputProps {
 }
 
 const inputTypes: InputType[] = [
-  "text", "email", "password", "number", "tel",
-  "date", "datetime-local", "file", "month", "range", "time", "week"
+  "text",
+  "email",
+  "password",
+  "number",
+  "tel",
+  "date",
+  "datetime-local",
+  "file",
+  "month",
+  "range",
+  "time",
+  "week",
 ];
 
 const getAutoComplete = (name?: string, type?: string): string | undefined => {
   const normalizedName = name?.toLowerCase() || "";
   const normalizedType = type?.toLowerCase() || "";
-  if (["email"].includes(normalizedName) || normalizedType === "email") return "email";
+  if (["email"].includes(normalizedName) || normalizedType === "email")
+    return "email";
   if (["name", "fullname", "username"].includes(normalizedName)) return "name";
-  if (["password"].includes(normalizedName) || normalizedType === "password") return "new-password";
-  if (["phone", "tel"].includes(normalizedName) || normalizedType === "tel") return "tel";
-  if (["url", "website"].includes(normalizedName) || normalizedType === "url") return "url";
+  if (["password"].includes(normalizedName) || normalizedType === "password")
+    return "new-password";
+  if (["phone", "tel"].includes(normalizedName) || normalizedType === "tel")
+    return "tel";
+  if (["url", "website"].includes(normalizedName) || normalizedType === "url")
+    return "url";
   return "off";
 };
 
@@ -41,15 +55,26 @@ const InputElement: React.FC<InputProps> = ({
   required = true,
   width = "100%",
   canEdit = false,
-  position = 'left',
+  position = "left",
   onSave,
-  onDelete
+  onDelete,
 }) => {
-  const initial = { id, name, title, type, placeholder, required, width, position };
+  const initial = {
+    id,
+    name,
+    title,
+    type,
+    placeholder,
+    required,
+    width,
+    position,
+  };
   const [values, setValues] = useState<InputProps>(initial);
   const [backup, setBackup] = useState<InputProps>(initial);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setValues((prev) => ({ ...prev, [name]: value }));
   };
@@ -72,7 +97,9 @@ const InputElement: React.FC<InputProps> = ({
       <div className="grid grid-cols-2 gap-4">
         {/* Title */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Title
+          </label>
           <input
             name="title"
             value={values.title || ""}
@@ -83,7 +110,9 @@ const InputElement: React.FC<InputProps> = ({
 
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Name
+          </label>
           <input
             name="name"
             value={values.name || ""}
@@ -94,7 +123,9 @@ const InputElement: React.FC<InputProps> = ({
 
         {/* Placeholder */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Placeholder</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Placeholder
+          </label>
           <input
             name="placeholder"
             value={values.placeholder || ""}
@@ -105,7 +136,9 @@ const InputElement: React.FC<InputProps> = ({
 
         {/* Type */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Type
+          </label>
           <select
             name="type"
             value={values.type || ""}
@@ -114,29 +147,48 @@ const InputElement: React.FC<InputProps> = ({
           >
             <option value="">Select type</option>
             {inputTypes.map((t) => (
-              <option key={t} value={t}>{t}</option>
+              <option key={t} value={t}>
+                {t}
+              </option>
             ))}
           </select>
         </div>
 
         {/* Width */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Width</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Width
+          </label>
           <select
             name="width"
             value={values.width}
             onChange={handleChange}
             className="w-full border border-gray-300 px-3 py-2 rounded"
           >
-            {["100%", "90%", "80%", "70%", "60%", "50%", "40%", "30%", "20%", "10%"].map((w) => (
-              <option key={w} value={w}>{w}</option>
+            {[
+              "100%",
+              "90%",
+              "80%",
+              "70%",
+              "60%",
+              "50%",
+              "40%",
+              "30%",
+              "20%",
+              "10%",
+            ].map((w) => (
+              <option key={w} value={w}>
+                {w}
+              </option>
             ))}
           </select>
         </div>
 
         {/* Position */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Position</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Position
+          </label>
           <select
             name="position"
             value={values.position || "left"}
@@ -165,9 +217,12 @@ const InputElement: React.FC<InputProps> = ({
 
   const getPositionClass = () => {
     switch (values.position) {
-      case "center": return "mx-auto";
-      case "right": return "ml-auto";
-      default: return "";
+      case "center":
+        return "mx-auto";
+      case "right":
+        return "ml-auto";
+      default:
+        return "";
     }
   };
 
@@ -191,7 +246,7 @@ const InputElement: React.FC<InputProps> = ({
 
   return (
     <EditableWrapper
-    id={values.id}
+      id={values.id}
       width={values.width}
       canEdit={canEdit}
       editView={editView}

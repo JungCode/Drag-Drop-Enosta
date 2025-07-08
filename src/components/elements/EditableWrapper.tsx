@@ -35,7 +35,7 @@ const EditableWrapper: React.FC<EditableWrapperProps> = ({
   onSave,
   onDelete,
   onDiscard,
-  id = "abcb",
+  id,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -47,7 +47,7 @@ const EditableWrapper: React.FC<EditableWrapperProps> = ({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: id as string });
+  } = useSortable({ id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -89,6 +89,13 @@ const EditableWrapper: React.FC<EditableWrapperProps> = ({
             <Icon icon="mdi:content-save-outline" className="text-lg" />
             Save
           </button>
+          <button
+            onClick={onDelete}
+            className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition"
+          >
+            <Icon icon="mdi:trash-can-outline" className="text-lg" />
+            Delete
+          </button>
         </div>
       </div>
     );
@@ -100,8 +107,11 @@ const EditableWrapper: React.FC<EditableWrapperProps> = ({
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onDoubleClick={() => {
+        if (canEdit) setIsEditing(true);
+      }}
       className={`relative p-2 rounded border transition-colors duration-300 border-dashed ${
-        canEdit && "h-28"
+        canEdit && "min-h-28"
       }
       ${hasImageElement && isDragging && "bg-gray-400"}
        flex flex-col justify-center ${
