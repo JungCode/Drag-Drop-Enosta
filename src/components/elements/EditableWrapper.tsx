@@ -93,6 +93,8 @@ const EditableWrapper: React.FC<EditableWrapperProps> = ({
       </div>
     );
   }
+  const hasImageElement = id.split("-")[0] === "Image";
+  console.log(hasImageElement);
 
   return (
     <div
@@ -100,15 +102,17 @@ const EditableWrapper: React.FC<EditableWrapperProps> = ({
       onMouseLeave={() => setIsHovered(false)}
       className={`relative p-2 rounded border transition-colors duration-300 border-dashed ${
         canEdit && "h-28"
-      } flex flex-col justify-center ${
-        canEdit && isHovered ? " border-gray-400" : "border-transparent "
-      } ${getPositionClass(position)}`}
+      }
+      ${hasImageElement && isDragging && "bg-gray-400"}
+       flex flex-col justify-center ${
+         canEdit && isHovered ? " border-gray-400" : "border-transparent "
+       } ${getPositionClass(position)}`}
       style={{ width, ...style, position: "relative", zIndex: 9999999 }}
       ref={setNodeRef}
       {...attributes}
       {...listeners}
     >
-      {children}
+      {!(hasImageElement && isDragging) && children}
       {isHovered && canEdit && !isEditing && (
         <div className="absolute top-1 right-1 flex gap-1 z-10">
           <button
