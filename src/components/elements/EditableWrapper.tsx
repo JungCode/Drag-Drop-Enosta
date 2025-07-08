@@ -46,12 +46,13 @@ const EditableWrapper: React.FC<EditableWrapperProps> = ({
     setNodeRef,
     transform,
     transition,
-    // isDragging,
+    isDragging,
   } = useSortable({ id: id as string });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+    opacity: isDragging ? "0.3" : "1",
   };
 
   const handleDiscard = () => {
@@ -97,13 +98,11 @@ const EditableWrapper: React.FC<EditableWrapperProps> = ({
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onDoubleClick={() => setIsEditing(true)}
       className={`relative p-2 rounded transition-all duration-300 border border-dashed ${
         canEdit && isHovered ? "border  border-gray-400" : "border-transparent"
       } ${getPositionClass(position)}`}
-      style={{ width, ...style, position: "relative", zIndex: 99999999999 }}
+      style={{ width, ...style, position: "relative", zIndex: 9999999 }}
       ref={setNodeRef}
-      // style={style}
       {...attributes}
       {...listeners}
     >

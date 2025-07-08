@@ -9,7 +9,6 @@ import SideBar from "../components/SideBar";
 import { useEffect, useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 import type { ElementItem } from "../types/ElementTypes";
-// import Create from "./Create";
 
 const FormBuilderPage = () => {
   // Initiate 2 example elements id
@@ -20,13 +19,12 @@ const FormBuilderPage = () => {
     string | null
   >(null);
 
+  // Fetch data at the first time reload
   useEffect(() => {
     const saved = localStorage.getItem("elements");
     const oldElements = saved ? JSON.parse(saved) : [];
     setEditableElementsId(oldElements.map((el: ElementItem) => el.id));
   }, []);
-
-  console.log("editableElementsId", editableElementsId);
 
   // ------ UI animation Functions ------
 

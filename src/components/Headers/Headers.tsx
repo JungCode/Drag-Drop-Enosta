@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const Headers = () => {
@@ -6,7 +5,7 @@ const Headers = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-neutral-200 px-6 py-4 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-[99999999] bg-white border-b border-neutral-200 px-6 py-4 shadow-sm">
       <nav className="flex items-center gap-6 text-sm font-medium">
         <Link
           to="/"

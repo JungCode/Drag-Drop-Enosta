@@ -30,11 +30,10 @@ const EditableElementsList = ({
   // console.log('ghostIdsList', ghostIdsList);
 
   return (
-    <div className="ml-52 px-52 mt-52 py-5" style={{ border: '1px solid red'}}>
+    <div className="ml-52 px-52 py-5">
       <ul
         ref={setNodeRef}
-        className="bg-white h-full p-6 shadow-xl rounded-xl "
-        style={{ border: '1px solid green'}}
+        className="bg-white mt-14 min-h-screen p-6 shadow-xl rounded-xl "
       >
         <SortableElementsList
           items={ghostIdsList}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import HeadingElement from "../components/elements/HeadingElement";
 import InputElement from "../components/elements/InputElement";
 import ButtonElement from "../components/elements/ButtonElement";
@@ -24,10 +24,6 @@ const Create = ({ items = [] } : { items: string[]}) => {
       }
     }
   }, [items]);
-
-  // console.log('items', items)
-
-  // console.log('elements', elements)
 
   return (
       <>
