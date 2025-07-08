@@ -1,10 +1,7 @@
 import FormBuilderPage from "./pages/FormBuilderPage";
 
-// function App() {
-  // return <FormBuilderPage />;
 import { Routes, Route } from "react-router-dom";
 import Headers from "./components/Headers/Headers";
-// import Create from "./pages/Create";
 import Preview from "./pages/Preview";
 
 
