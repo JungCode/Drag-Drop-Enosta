@@ -14,7 +14,7 @@ const TypeElement = ({ icon, name, isOverFormBuilder }: Props) => {
   // Use useMemo to not to re-render therefore we can drag it normally
   const ownType: KindOfElementType = useMemo(
     () => ({
-      id: name + Date.now().toString(),
+      id: name + '-' + Date.now().toString(),
       type: name.toLowerCase() as KindOfElementType["type"],
     }),
     // Re-create the id whenever TypeElement is dropped or just move into form builder
@@ -22,7 +22,7 @@ const TypeElement = ({ icon, name, isOverFormBuilder }: Props) => {
     [isOverFormBuilder]
   );
 
-  const { attributes, listeners, setNodeRef, transform, over } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: ownType.id,
   });
   const style: React.CSSProperties = {

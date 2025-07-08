@@ -6,20 +6,30 @@ import {
 } from "@dnd-kit/core";
 import EditableElementsList from "../components/EditableElementsList";
 import SideBar from "../components/SideBar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
+import type { ElementItem } from "../types/ElementTypes";
+import { syncElementsWithLocalStorage } from "../ultis/storage";
 
 const FormBuilderPage = () => {
   // Initiate 2 example elements id
-  const [editableElementsId, setEditableElementsId] = useState([
-    "Heading1",
-    "Heading2",
-  ]);
+  const [editableElementsId, setEditableElementsId] = useState<string[]>([]);
   const [activeIdElement, setActiveIdElement] = useState<string | null>(null);
   // The state that tracks if an element is going through form builder
   const [OverFormBuilderElementId, setOverFormBuilderElementId] = useState<
     string | null
   >(null);
+
+  // Fetch data at the first time reload
+  useEffect(() => {
+    const savedElements = localStorage.getItem("elements");
+    const parsedElements: ElementItem[] = savedElements
+      ? JSON.parse(savedElements)
+      : [];
+
+    const elementIds = parsedElements.map((el) => el.id);
+    setEditableElementsId(elementIds);
+  }, []);
 
   // ------ UI animation Functions ------
 
@@ -37,9 +47,11 @@ const FormBuilderPage = () => {
       // therefore the (active.id === over.id) -> (true) is happended
       if (currIndex === -1 && OverFormBuilderElementId !== null) {
         setEditableElementsId([...editableElementsId, active.id as string]);
+        syncElementsWithLocalStorage([
+          ...editableElementsId,
+          active.id as string,
+        ]);
       }
-      // TODO: change on local storage
-      console.log([...editableElementsId, active.id as string]);
 
       return;
     }
@@ -61,9 +73,7 @@ const FormBuilderPage = () => {
     } else {
       movedArray = arrayMove(editableElementsId, oldIndex, newIndex);
     }
-    // TODO: change on local storage
-    console.log(movedArray);
-
+    syncElementsWithLocalStorage(movedArray);
     setEditableElementsId(movedArray);
   }
 
@@ -83,7 +93,7 @@ const FormBuilderPage = () => {
   // ------ End of UI animation Functions ------
 
   return (
-    <div className="bg-gray-100 h-screen">
+    <div className="bg-gray-100 ">
       <DndContext
         onDragStart={handleOnDragStart}
         onDragEnd={handleDragEnd}
@@ -94,6 +104,7 @@ const FormBuilderPage = () => {
           idsList={editableElementsId}
           activeIdElement={activeIdElement}
           OverFormBuilderElementId={OverFormBuilderElementId}
+          setEditableElementsId={setEditableElementsId}
         />
       </DndContext>
     </div>
