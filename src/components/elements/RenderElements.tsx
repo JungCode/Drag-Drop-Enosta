@@ -29,7 +29,19 @@ const RenderElemment = ({
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as ElementItem[];
-        setElements(parsed);
+        let newElements = parsed;
+        if (parsed.length !== items.length) {
+          const newItemId = items[items.length - 1];
+          newElements = [
+            ...parsed,
+            {
+              id: newItemId,
+              type: newItemId.split("-")[0] as ElementType,
+              data: {},
+            },
+          ];
+        }
+        setElements(newElements);
       } catch (err) {
         console.error("Failed to parse localStorage data:", err);
       }

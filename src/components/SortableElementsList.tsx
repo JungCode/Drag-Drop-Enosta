@@ -8,7 +8,7 @@ interface Props {
   isSideBarItem: boolean;
   OverFormBuilderElementId: string | null;
   activeIdElement: string | null;
-  setEditableElementsId: React.Dispatch<React.SetStateAction<string[]>>
+  setEditableElementsId: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const SortableElementsList = ({
@@ -16,13 +16,15 @@ const SortableElementsList = ({
   isSideBarItem,
   OverFormBuilderElementId,
   activeIdElement,
-  setEditableElementsId
+  setEditableElementsId,
 }: Props) => {
-  // console.log('items', items)
   return (
     <div className="flex flex-col gap-2">
       <SortableContext items={items as string[]}>
-        <RenderElemment items={items} setEditableElementsId={setEditableElementsId}/>
+        <RenderElemment
+          items={items}
+          setEditableElementsId={setEditableElementsId}
+        />
         <DragOverlay>
           {/* Create overlay whenenver the element is not locate at sidebar element (dragging over form builder),
           we only use this overlay for re-arrange because we already got TypeElementOverlayCustom 

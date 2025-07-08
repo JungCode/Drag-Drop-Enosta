@@ -5,14 +5,14 @@ interface Props {
   idsList: string[];
   OverFormBuilderElementId: string | null;
   activeIdElement: string | null;
-  setEditableElementsId: React.Dispatch<React.SetStateAction<string[]>>
+  setEditableElementsId: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const EditableElementsList = ({
   idsList,
   OverFormBuilderElementId,
   activeIdElement,
-  setEditableElementsId
+  setEditableElementsId,
 }: Props) => {
   const { setNodeRef } = useDroppable({
     id: "droppable",
@@ -28,8 +28,6 @@ const EditableElementsList = ({
   if (isActivedItemFromOutSide && OverFormBuilderElementId !== null) {
     ghostIdsList = [...idsList, activeIdElement as string];
   }
-
-  // console.log('ghostIdsList', ghostIdsList);
 
   return (
     <div className="ml-52 px-52 py-5">
