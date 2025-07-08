@@ -1,7 +1,23 @@
 import FormBuilderPage from "./pages/FormBuilderPage";
 
+// function App() {
+  // return <FormBuilderPage />;
+import { Routes, Route } from "react-router-dom";
+import Headers from "./components/Headers/Headers";
+// import Create from "./pages/Create";
+import Preview from "./pages/Preview";
+
+
 function App() {
-  return <FormBuilderPage />;
+  return (
+    <div>
+      <Headers />
+      <Routes>
+        <Route path="/" element={<FormBuilderPage />} />
+        <Route path="/preview" element={<Preview />} />
+      </Routes>
+    </div>
+  );
 }
 
 export default App;

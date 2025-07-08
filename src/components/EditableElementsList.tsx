@@ -27,11 +27,14 @@ const EditableElementsList = ({
     ghostIdsList = [...idsList, activeIdElement as string];
   }
 
+  // console.log('ghostIdsList', ghostIdsList);
+
   return (
-    <div className="ml-52 px-52 min-h-screen h-full py-5">
+    <div className="ml-52 px-52 mt-52 py-5" style={{ border: '1px solid red'}}>
       <ul
         ref={setNodeRef}
         className="bg-white h-full p-6 shadow-xl rounded-xl "
+        style={{ border: '1px solid green'}}
       >
         <SortableElementsList
           items={ghostIdsList}

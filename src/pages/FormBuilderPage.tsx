@@ -6,20 +6,27 @@ import {
 } from "@dnd-kit/core";
 import EditableElementsList from "../components/EditableElementsList";
 import SideBar from "../components/SideBar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
+import type { ElementItem } from "../types/ElementTypes";
+// import Create from "./Create";
 
 const FormBuilderPage = () => {
   // Initiate 2 example elements id
-  const [editableElementsId, setEditableElementsId] = useState([
-    "Heading1",
-    "Heading2",
-  ]);
+  const [editableElementsId, setEditableElementsId] = useState<string[]>([]);
   const [activeIdElement, setActiveIdElement] = useState<string | null>(null);
   // The state that tracks if an element is going through form builder
   const [OverFormBuilderElementId, setOverFormBuilderElementId] = useState<
     string | null
   >(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("elements");
+    const oldElements = saved ? JSON.parse(saved) : [];
+    setEditableElementsId(oldElements.map((el: ElementItem) => el.id));
+  }, []);
+
+  console.log("editableElementsId", editableElementsId);
 
   // ------ UI animation Functions ------
 
@@ -37,9 +44,32 @@ const FormBuilderPage = () => {
       // therefore the (active.id === over.id) -> (true) is happended
       if (currIndex === -1 && OverFormBuilderElementId !== null) {
         setEditableElementsId([...editableElementsId, active.id as string]);
+        const listId = [...editableElementsId, active.id as string];
+
+        const saved = localStorage.getItem("elements");
+        const oldElements = saved ? JSON.parse(saved) : [];
+
+        const elementMap = new Map<string, ElementItem>();
+        oldElements.forEach((el: ElementItem) => {
+          elementMap.set(el.id, el);
+        });
+
+        const updatedElements = listId.map((id) => {
+          if (elementMap.has(id)) {
+            return elementMap.get(id);
+          }
+
+          const type = id.split("-")[0];
+
+          return {
+            id,
+            type,
+            data: {},
+          };
+        });
+
+        localStorage.setItem("elements", JSON.stringify(updatedElements));
       }
-      // TODO: change on local storage
-      console.log([...editableElementsId, active.id as string]);
 
       return;
     }
@@ -62,10 +92,33 @@ const FormBuilderPage = () => {
       movedArray = arrayMove(editableElementsId, oldIndex, newIndex);
     }
     // TODO: change on local storage
-    console.log(movedArray);
+    const saved = localStorage.getItem("elements");
+    const oldElements = saved ? JSON.parse(saved) : [];
+
+    const elementMap = new Map<string, ElementItem>();
+    oldElements.forEach((el: ElementItem) => {
+      elementMap.set(el.id, el);
+    });
+
+    const updatedElements = movedArray.map((id) => {
+      if (elementMap.has(id)) {
+        return elementMap.get(id);
+      }
+
+      const type = id.split("-")[0];
+
+      return {
+        id,
+        type,
+        data: {},
+      };
+    });
+
+    localStorage.setItem("elements", JSON.stringify(updatedElements));
 
     setEditableElementsId(movedArray);
   }
+  // }
 
   function handleOnDragStart(event: DragStartEvent) {
     setActiveIdElement(event.active.id as string);
@@ -83,7 +136,7 @@ const FormBuilderPage = () => {
   // ------ End of UI animation Functions ------
 
   return (
-    <div className="bg-gray-100 h-screen">
+    <div className="bg-gray-100 ">
       <DndContext
         onDragStart={handleOnDragStart}
         onDragEnd={handleDragEnd}
