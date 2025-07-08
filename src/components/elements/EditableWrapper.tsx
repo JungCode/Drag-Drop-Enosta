@@ -52,7 +52,7 @@ const EditableWrapper: React.FC<EditableWrapperProps> = ({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? "0.3" : "1",
+    opacity: isDragging ? "0.4" : "1",
   };
 
   const handleDiscard = () => {
@@ -98,8 +98,10 @@ const EditableWrapper: React.FC<EditableWrapperProps> = ({
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative p-2 rounded transition-all duration-300 border border-dashed ${
-        canEdit && isHovered ? "border  border-gray-400" : "border-transparent"
+      className={`relative p-2 rounded border transition-colors duration-300 border-dashed ${
+        canEdit && "h-28"
+      } flex flex-col justify-center ${
+        canEdit && isHovered ? " border-gray-400" : "border-transparent "
       } ${getPositionClass(position)}`}
       style={{ width, ...style, position: "relative", zIndex: 9999999 }}
       ref={setNodeRef}
