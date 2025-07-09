@@ -19,6 +19,8 @@ const FormBuilderPage = () => {
   const [OverFormBuilderElementId, setOverFormBuilderElementId] = useState<
     string | null
   >(null);
+  const [isActivedItemFromSidebar, setIsActivedItemFromSidebar] =
+    useState<boolean>(false);
 
   // Fetch data at the first time reload
   useEffect(() => {
@@ -36,21 +38,16 @@ const FormBuilderPage = () => {
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
+    setIsActivedItemFromSidebar(false);
     setOverFormBuilderElementId(null);
 
     // Check if a element did not change its position then do nothing
     if (!over || active.id === over.id) {
-      const currIndex = editableElementsId.indexOf(active.id as string);
-
-      // Special case (creating element): Check if the current array does not include the actived element,
+      // Special case (creating element): Check if the element is created from sidebar
       // that means the user want to create a new element at the last of the array
       // therefore the (active.id === over.id) -> (true) is happended
-      if (currIndex === -1 && OverFormBuilderElementId !== null) {
-        setEditableElementsId([...editableElementsId, active.id as string]);
-        syncElementsWithLocalStorage([
-          ...editableElementsId,
-          active.id as string,
-        ]);
+      if (isActivedItemFromSidebar) {
+        syncElementsWithLocalStorage([...editableElementsId]);
       }
 
       return;
@@ -79,14 +76,34 @@ const FormBuilderPage = () => {
 
   function handleOnDragStart(event: DragStartEvent) {
     setActiveIdElement(event.active.id as string);
+    setIsActivedItemFromSidebar(
+      !editableElementsId.includes(event.active.id as string)
+    );
   }
 
   function handleOnDragMove(event: DragMoveEvent) {
     const { over, active } = event;
 
     if (over !== null) {
+      if (
+        isActivedItemFromSidebar &&
+        !editableElementsId.includes(active.id as string)
+      ) {
+        setEditableElementsId([
+          ...editableElementsId,
+          activeIdElement as string,
+        ]);
+      }
+
       setOverFormBuilderElementId(active.id as string);
     } else {
+      if (isActivedItemFromSidebar) {
+        setEditableElementsId([
+          ...editableElementsId.filter(
+            (elementId) => elementId != activeIdElement
+          ),
+        ]);
+      }
       setOverFormBuilderElementId(null);
     }
   }
@@ -98,9 +115,11 @@ const FormBuilderPage = () => {
         onDragStart={handleOnDragStart}
         onDragEnd={handleDragEnd}
         onDragMove={handleOnDragMove}
+        onDragAbort={() => console.log(false)}
       >
         <SideBar isOverFormBuilder={OverFormBuilderElementId !== null} />
         <EditableElementsList
+          isActivedItemFromSidebar={isActivedItemFromSidebar}
           idsList={editableElementsId}
           activeIdElement={activeIdElement}
           OverFormBuilderElementId={OverFormBuilderElementId}
