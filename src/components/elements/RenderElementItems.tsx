@@ -34,21 +34,15 @@ const RenderElementItem: React.FC<RenderElementItemProps> = ({
     onDelete,
   };
 
-  console.log("rerender", item.id);
-
   switch (item.type as ElementType) {
     case ELEMENT_TYPES.Heading:
       return <HeadingElement {...commonProps} {...item.data} />;
 
     case ELEMENT_TYPES.Input:
-      return (
-        <InputElement {...commonProps} {...(item.data as InputData)} />
-      );
+      return <InputElement {...commonProps} {...(item.data as InputData)} />;
 
     case ELEMENT_TYPES.Button:
-      return (
-        <ButtonElement {...commonProps} {...(item.data as ButtonData)} />
-      );
+      return <ButtonElement {...commonProps} {...(item.data as ButtonData)} />;
 
     case ELEMENT_TYPES.Image:
       return <ImageElement {...commonProps} {...(item.data || {})} />;
@@ -59,8 +53,7 @@ const RenderElementItem: React.FC<RenderElementItemProps> = ({
           {...commonProps}
           data={{
             ...(item.data as SelectData),
-            options:
-              "options" in item.data ? item.data.options ?? [] : [],
+            options: "options" in item.data ? item.data.options ?? [] : [],
           }}
         />
       );

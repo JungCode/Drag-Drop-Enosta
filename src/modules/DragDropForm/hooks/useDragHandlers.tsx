@@ -1,38 +1,20 @@
-import { useEffect, useState } from "react";
-import type { DragState, ElementItem } from "../../../types/ElementTypes";
 import type {
   DragEndEvent,
   DragMoveEvent,
   DragStartEvent,
 } from "@dnd-kit/core";
+import type { DragState } from "../../../types/ElementTypes";
 import { syncElementsWithLocalStorage } from "../../../ultis/storage";
 import { arrayMove } from "@dnd-kit/sortable";
 
-export default function useDragDrop(): {
-  dragState: DragState;
-  setDragState: React.Dispatch<React.SetStateAction<DragState>>;
+export default function useDragHandlers(
+  dragState: DragState,
+  setDragState: React.Dispatch<React.SetStateAction<DragState>>
+): {
   handleOnDragStart: (event: DragStartEvent) => void;
   handleOnDragMove: (event: DragEndEvent) => void;
   handleOnDragEnd: (event: DragMoveEvent) => void;
 } {
-  const [dragState, setDragState] = useState<DragState>({
-    editableElementsIds: [],
-    activeId: null,
-    overId: null,
-    isFromSidebar: false,
-  });
-
-  // Fetch data at the first time reload
-  useEffect(() => {
-    const savedElements = localStorage.getItem("elements");
-    const parsedElements: ElementItem[] = savedElements
-      ? JSON.parse(savedElements)
-      : [];
-
-    const elementIds = parsedElements.map((el) => el.id);
-    setDragState((prev) => ({ ...prev, editableElementsIds: elementIds }));
-  }, []);
-
   function handleOnDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
@@ -107,12 +89,9 @@ export default function useDragDrop(): {
       setDragState((prev) => ({ ...prev, overId: null }));
     }
   }
-
   return {
-    dragState,
-    setDragState,
-    handleOnDragStart,
-    handleOnDragMove,
-    handleOnDragEnd,
+    handleOnDragEnd: handleOnDragEnd,
+    handleOnDragMove: handleOnDragMove,
+    handleOnDragStart: handleOnDragStart,
   };
 }

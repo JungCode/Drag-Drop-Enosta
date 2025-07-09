@@ -1,16 +1,13 @@
 import { DndContext } from "@dnd-kit/core";
 import SideBar from "../../SideBar/components/Sidebar";
 import FormBuilder from "./FormBuilder";
-import useDragDrop from "../hooks/useDragDrop";
+import useDragState from "../hooks/useDragState";
+import useDragHandlers from "../hooks/useDragHandlers";
 
 const DragDropLayout = () => {
-  const {
-    dragState,
-    setDragState,
-    handleOnDragStart,
-    handleOnDragMove,
-    handleOnDragEnd,
-  } = useDragDrop();
+  const [dragState, setDragState] = useDragState();
+  const { handleOnDragStart, handleOnDragEnd, handleOnDragMove } =
+    useDragHandlers(dragState, setDragState);
   return (
     <DndContext
       onDragStart={handleOnDragStart}
