@@ -4,7 +4,7 @@ import {
 } from "@dnd-kit/sortable";
 import { DragOverlay } from "@dnd-kit/core";
 import EditableElementOverlay from "./EditableElementOverlay";
-import RenderElemment from "./elements/RenderElements";
+import RenderElemments from "./elements/RenderElements";
 
 interface Props {
   items: string[];
@@ -27,7 +27,7 @@ const SortableElementsList = ({
         items={items as string[]}
         strategy={verticalListSortingStrategy}
       >
-        <RenderElemment
+        <RenderElemments
           items={items}
           setEditableElementsId={setEditableElementsId}
         />

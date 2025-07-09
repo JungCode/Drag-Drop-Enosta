@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import type { JSX } from "react";
 import EditableWrapper from "./EditableWrapper";
+import EditFormWrapper from "./EditFormWrapper";
+import FormLabel from "../common/FormLabel";
+import type { PositionType } from "../../types/ElementTypes";
 
 export interface HeadingData {
   title?: string;
   size?: 1 | 2 | 3 | 4 | 5;
   name?: string;
-  position?: "left" | "center" | "right";
+  position?: PositionType;
   color?: string;
   id: string;
 }
@@ -17,7 +20,7 @@ interface HeadingProps extends HeadingData {
   onDelete?: () => void;
 }
 
-const HeadingElement: React.FC<HeadingProps> = ({
+const HeadingElement: React.FC<HeadingProps> = React.memo(({
   title = "Heading",
   size = 2,
   name = "title",
@@ -31,65 +34,83 @@ const HeadingElement: React.FC<HeadingProps> = ({
   const initial = { title, size, name, position, color, id };
   const [values, setValues] = useState<HeadingData>(initial);
   const [backup, setBackup] = useState<HeadingData>(initial);
+  const [errors, setErrors] = useState<{ name?: string }>({});
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  const handleChange = useCallback(<K extends keyof HeadingData>(
+    key: K,
+    value: HeadingData[K]
   ) => {
-    const { name, value } = e.target;
+    setValues((prev) => ({ ...prev, [key]: value }));
+  }, []);
 
-    if (name === "size") {
-      setValues((prev) => ({ ...prev, size: Number(value) as HeadingData["size"] }));
-    } else {
-      setValues((prev) => ({ ...prev, [name]: value }));
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { name, value } = e.target;
+      if (name === "size") {
+        handleChange("size", Number(value) as HeadingData["size"]);
+      } else {
+        handleChange(name as keyof HeadingData, value);
+      }
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
+    },
+    [handleChange]
+  );
+
+  const handleSave = useCallback(() => {
+    const newErrors: { name?: string } = {};
+    if (!values.name?.trim()) {
+      newErrors.name = "This field is required.";
+      setErrors(newErrors);
+      return false;
     }
-  };
 
-
-  const handleSave = () => {
+    setErrors({});
     setBackup(values);
     onSave?.(values);
-  };
+    return true;
+  }, [values, onSave]);
 
-  const handleDiscard = () => {
+  const handleDiscard = useCallback(() => {
     setValues(backup);
-  };
+    setErrors({});
+  }, [backup]);
 
-  const sizeClasses: Record<1 | 2 | 3 | 4 | 5, string> = {
+  const Tag = useMemo(() => `h${values.size}` as keyof JSX.IntrinsicElements, [values.size]);
+
+  const sizeClasses = useMemo(() => ({
     1: "text-5xl",
     2: "text-4xl",
     3: "text-3xl",
     4: "text-2xl",
     5: "text-xl",
-  };
+  }), []);
 
-  const positionClasses: Record<"left" | "center" | "right", string> = {
+  const positionClasses = useMemo(() => ({
     left: "text-left",
     center: "text-center",
     right: "text-right",
-  };
+  }), []);
 
-  const Tag = `h${values.size}` as keyof JSX.IntrinsicElements;
-
-  const editView = (
-    <div className="grid grid-cols-2 gap-4">
-      {/* Title */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Heading Text</label>
+  const editView = useMemo(() => (
+    <EditFormWrapper>
+      <div className="w-full">
+        <FormLabel htmlFor="heading-title">Heading Text</FormLabel>
         <input
+          id="heading-title"
           name="title"
           value={values.title}
-          onChange={handleChange}
+          onChange={handleInputChange}
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
         />
       </div>
 
-      {/* Size */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Size</label>
+      <div className="w-full">
+        <FormLabel htmlFor="heading-size">Size</FormLabel>
         <select
+          id="heading-size"
           name="size"
           value={values.size}
-          onChange={handleChange}
+          onChange={handleInputChange}
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
         >
           {[1, 2, 3, 4, 5].map((s) => (
@@ -100,24 +121,35 @@ const HeadingElement: React.FC<HeadingProps> = ({
         </select>
       </div>
 
-      {/* Name */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Name</label>
+      <div className="w-full">
+        <FormLabel
+          htmlFor="heading-name"
+          className={errors.name ? "text-red-600" : ""}
+        >
+          Name <span className="text-red-600">*</span>
+        </FormLabel>
         <input
+          id="heading-name"
           name="name"
+          required
           value={values.name}
-          onChange={handleChange}
-          className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+          onChange={handleInputChange}
+          className={`w-full rounded px-3 py-2 text-sm ${
+            errors.name ? "border border-red-500" : "border border-gray-300"
+          }`}
         />
+        {errors.name && (
+          <span className="text-xs text-red-600 mt-1 block">{errors.name}</span>
+        )}
       </div>
 
-      {/* Position */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Position</label>
+      <div className="w-full">
+        <FormLabel htmlFor="heading-position">Position</FormLabel>
         <select
+          id="heading-position"
           name="position"
           value={values.position}
-          onChange={handleChange}
+          onChange={handleInputChange}
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
         >
           <option value="left">Left</option>
@@ -126,19 +158,19 @@ const HeadingElement: React.FC<HeadingProps> = ({
         </select>
       </div>
 
-      {/* Color */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Color</label>
+      <div className="w-full">
+        <FormLabel htmlFor="heading-color">Color</FormLabel>
         <input
+          id="heading-color"
           type="color"
           name="color"
           value={values.color}
-          onChange={handleChange}
+          onChange={handleInputChange}
           className="w-20 h-10 border-none"
         />
       </div>
-    </div>
-  );
+    </EditFormWrapper>
+  ), [values, errors, handleInputChange]);
 
   return (
     <EditableWrapper
@@ -152,13 +184,14 @@ const HeadingElement: React.FC<HeadingProps> = ({
     >
       <Tag
         style={{ color: values.color }}
-        className={`font-bold ${sizeClasses[values.size || 2]} ${positionClasses[values.position || 'left']} w-full`}
-        {...(values.name ? { name: values.name } : {})}
+        className={`font-bold ${sizeClasses[values.size || 2]} ${
+          positionClasses[values.position || "left"]
+        } w-full`}
       >
         {values.title}
       </Tag>
     </EditableWrapper>
   );
-};
+});
 
 export default HeadingElement;
