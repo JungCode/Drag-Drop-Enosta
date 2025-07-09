@@ -36,10 +36,7 @@ const SortableElementsList = ({
           we only use this overlay for re-arrange because we already got TypeElementOverlayCustom 
           for TypeElement within a difference style */}
           {!isSideBarItem || OverFormBuilderElementId ? (
-            <EditableElementOverlay
-              isSideBarItem={isSideBarItem}
-              id={activeIdElement}
-            />
+            <EditableElementOverlay id={activeIdElement} />
           ) : null}
         </DragOverlay>
       </SortableContext>
