@@ -22,7 +22,7 @@ const SidebarTypeElement = ({ icon, name, isOverFormBuilder }: Props) => {
       {
         <>
           <Icon icon={icon} />
-          <span className="pl-1 border-l">{name}</span>
+          <span className="pt-1 border-t">{name}</span>
         </>
       }
     </TypeElementOverlayCustom>

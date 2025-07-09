@@ -20,9 +20,9 @@ const TypeElementOverlayCustom = ({
   const draggingStyle = isDragged ? "relative z-10 shadow-md" : undefined;
 
   return (
-    <li className={isDragged ? "relative" : undefined}>
+    <li className={`${isDragged ? "relative " : ""} aspect-square`}>
       <div
-        className={`${draggingStyle} transition-colors bg-blue-600 text-white p-2 rounded-md flex  items-center gap-1 cursor-pointer hover:bg-blue-400`}
+        className={`${draggingStyle} transition-colors h-full bg-blue-600 text-white p-2 rounded-md flex flex-col justify-center items-center gap-1 cursor-pointer hover:bg-blue-400`}
         style={style}
         ref={setNodeRef}
         {...attributes}

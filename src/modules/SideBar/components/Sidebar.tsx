@@ -14,17 +14,19 @@ const ELEMENT_TYPES_DATA = [
 
 const SideBar = ({ isOverFormBuilder }: Props) => {
   return (
-    <aside className="h-screen flex flex-col items-center justify-center w-52 fixed">
-      <ul className="bg-white p-5 flex flex-col gap-5 w-full h-7/10 rounded-r-xl shadow-xl">
-        {ELEMENT_TYPES_DATA.map((element) => (
-          <SidebarTypeElement
-            key={element.name}
-            isOverFormBuilder={isOverFormBuilder}
-            icon={element.icon}
-            name={element.name}
-          />
-        ))}
-      </ul>
+    <aside className="h-screen w-60 fixed">
+      <div className="h-full bg-white shadow-xl">
+        <ul className=" p-5 gap-3 w-full  pt-20 grid grid-cols-2">
+          {ELEMENT_TYPES_DATA.map((element) => (
+            <SidebarTypeElement
+              key={element.name}
+              isOverFormBuilder={isOverFormBuilder}
+              icon={element.icon}
+              name={element.name}
+            />
+          ))}
+        </ul>
+      </div>
     </aside>
   );
 };
