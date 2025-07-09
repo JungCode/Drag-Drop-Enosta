@@ -1,4 +1,7 @@
-import { SortableContext } from "@dnd-kit/sortable";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { DragOverlay } from "@dnd-kit/core";
 import EditableElementOverlay from "./EditableElementOverlay";
 import RenderElemment from "./elements/RenderElements";
@@ -19,8 +22,11 @@ const SortableElementsList = ({
   setEditableElementsId,
 }: Props) => {
   return (
-    <div className="flex flex-col gap-2">
-      <SortableContext items={items as string[]}>
+    <div className="flex flex-col gap-8">
+      <SortableContext
+        items={items as string[]}
+        strategy={verticalListSortingStrategy}
+      >
         <RenderElemment
           items={items}
           setEditableElementsId={setEditableElementsId}

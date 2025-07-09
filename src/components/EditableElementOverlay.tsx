@@ -4,7 +4,13 @@ interface Props {
   id: string | null;
   isSideBarItem?: boolean;
 }
-const EditableElementOverlay = ({ id, isSideBarItem = false }: Props) => {
+const EditableElementOverlay = ({
+  isSideBarItem = false,
+  id = "default",
+}: Props) => {
+  const height = id ? document.getElementById(id)?.offsetHeight : undefined;
+  const width = id ? document.getElementById(id)?.offsetWidth : undefined;
+
   const style = isSideBarItem
     ? {
         width: "100%",
@@ -12,14 +18,20 @@ const EditableElementOverlay = ({ id, isSideBarItem = false }: Props) => {
         justifyContent: "center",
       }
     : undefined;
-  const name = id?.split("-")[0];
+  const styleDragging = {
+    zIndex: 9999999,
+    height: `${height}px`,
+    width: `${width}px`,
+  };
+
+  console.log(height, width);
   return (
     <li
-      style={style}
-      className="h-28 flex justify-center items-center p-4 opacity-60 rounded-md text-xl text-center border border-dashed border-gray-400 hover:border-black hover:opacity-100 cursor-pointer bg-white"
+      style={{ ...style, ...styleDragging }}
+      className="relative flex justify-center items-center p-4 opacity-60 rounded-md text-xl text-center border border-dashed border-gray-400 hover:border-black hover:opacity-100 cursor-pointer bg-white"
     >
       {/* Turn into drag icons when the element came from sidebar */}
-      {isSideBarItem ? <Icon icon="fluent:drag-24-filled" /> : name}
+      {<Icon icon="fluent:drag-24-filled" />}
     </li>
   );
 };

@@ -47,10 +47,11 @@ const EditableWrapper: React.FC<EditableWrapperProps> = ({
     transform,
     transition,
     isDragging,
+    active,
   } = useSortable({ id });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition,
     opacity: isDragging ? "0.4" : "1",
   };
@@ -108,16 +109,15 @@ const EditableWrapper: React.FC<EditableWrapperProps> = ({
       onDoubleClick={() => {
         if (canEdit) setIsEditing(true);
       }}
-      className={`relative p-2 rounded border transition-colors duration-300 border-dashed flex flex-col justify-center ${
-        canEdit && "min-h-28"
-      }
-       flex flex-col justify-center ${
-         canEdit && isHovered ? " border-gray-400" : "border-transparent "
-       } ${getPositionClass(position)}`}
-      style={{ width, ...style, position: "relative", zIndex: 9999999 }}
+      className={`relative p-2 rounded border transition-colors duration-300 border-dashed flex flex-col justify-center cursor-pointer 
+        ${
+          canEdit && isHovered ? " border-gray-400" : "border-transparent "
+        } ${getPositionClass(position)}`}
+      style={{ width, ...style, position: "relative", zIndex: 9999998 }}
       ref={setNodeRef}
       {...attributes}
       {...listeners}
+      id={id}
     >
       {children}
     </div>
