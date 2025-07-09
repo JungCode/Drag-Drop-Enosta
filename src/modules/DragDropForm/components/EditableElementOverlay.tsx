@@ -1,12 +1,11 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
+import useElementSize from "../hooks/useElementSize";
 
 interface Props {
   id: string;
 }
-const EditableElementOverlay = ({ id = "default" }: Props) => {
-  const height = id ? document.getElementById(id)?.offsetHeight : undefined;
-  const width = id ? document.getElementById(id)?.offsetWidth : undefined;
-
+const EditableElementOverlay = ({ id }: Props) => {
+  const [width, height] = useElementSize(id);
   const styleDragging = {
     zIndex: 9999999,
     height: height ? `${height}px` : undefined,

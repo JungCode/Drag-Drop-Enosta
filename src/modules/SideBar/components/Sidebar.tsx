@@ -1,4 +1,4 @@
-import TypeElements from "./TypeElements";
+import TypeElement from "./TypeElements";
 
 interface Props {
   isOverFormBuilder: boolean;
@@ -7,27 +7,27 @@ const SideBar = ({ isOverFormBuilder }: Props) => {
   return (
     <aside className="h-screen flex flex-col items-center justify-center w-52 fixed">
       <ul className="bg-white p-5 flex flex-col gap-5 w-full h-7/10 rounded-r-xl shadow-xl">
-        <TypeElements
+        <TypeElement
           isOverFormBuilder={isOverFormBuilder}
           icon="fa-solid:heading"
           name="Heading"
         />
-        <TypeElements
+        <TypeElement
           isOverFormBuilder={isOverFormBuilder}
           icon="radix-icons:input"
           name="Input"
         />
-        <TypeElements
+        <TypeElement
           isOverFormBuilder={isOverFormBuilder}
           icon="radix-icons:button"
           name="Button"
         />
-        <TypeElements
+        <TypeElement
           isOverFormBuilder={isOverFormBuilder}
           icon="cuida:image-outline"
           name="Image"
         />
-        <TypeElements
+        <TypeElement
           isOverFormBuilder={isOverFormBuilder}
           icon="lsicon:list-outline"
           name="Selection"

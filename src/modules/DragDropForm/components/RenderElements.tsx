@@ -3,9 +3,9 @@ import {
   type DragState,
   type ElementItem,
   type ElementType,
-} from "../../types/ElementTypes";
-import { saveElements } from "../../ultis/storage";
-import RenderElementItem from "./RenderElementItems";
+} from "../../../types/ElementTypes";
+import { saveElements } from "../../../ultis/storage";
+import RenderElementItems from "../../../components/elements/RenderElementItems";
 
 const RenderElemments = ({
   items = [],
@@ -80,7 +80,7 @@ const RenderElemments = ({
   const renderedElements = useMemo(
     () =>
       elements.map((item) => (
-        <RenderElementItem
+        <RenderElementItems
           key={item.id}
           item={item}
           canEdit

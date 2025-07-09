@@ -3,9 +3,9 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { DragOverlay } from "@dnd-kit/core";
+import type { DragState } from "../../../types/ElementTypes";
 import EditableElementOverlay from "./EditableElementOverlay";
-import RenderElemments from "./elements/RenderElements";
-import type { DragState } from "../types/ElementTypes";
+import RenderElemments from "./RenderElements";
 
 interface Props {
   items: string[];
@@ -15,13 +15,15 @@ interface Props {
   setDragState: React.Dispatch<React.SetStateAction<DragState>>;
 }
 
-const SortableElementsList = ({
+const BuilderSortableList = ({
   items,
   isFromSidebar,
   overId,
   activeId,
   setDragState,
 }: Props) => {
+  const shouldShowOverlay =
+    (!isFromSidebar && activeId) || (overId && activeId);
   return (
     <div className="flex flex-col gap-8">
       <SortableContext
@@ -30,13 +32,11 @@ const SortableElementsList = ({
       >
         <RenderElemments items={items} setDragState={setDragState} />
         <DragOverlay>
-          {(!isFromSidebar && activeId) || (overId && activeId) ? (
-            <EditableElementOverlay id={activeId} />
-          ) : null}
+          {shouldShowOverlay ? <EditableElementOverlay id={activeId} /> : null}
         </DragOverlay>
       </SortableContext>
     </div>
   );
 };
 
-export default SortableElementsList;
+export default BuilderSortableList;

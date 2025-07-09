@@ -89,3 +89,15 @@ export interface ElementItem {
   type: ElementType;
   data: ElementData;
 }
+
+export interface DragState {
+  editableElementsIds: string[];
+  activeId: string | null;
+  overId: string | null;
+  isFromSidebar: boolean;
+}
+
+export type KindOfElementType = {
+  id: string;
+  type: "heading" | "input" | "button" | "select" | "image";
+};
