@@ -3,18 +3,18 @@ import SideBar from "../../SideBar/components/Sidebar";
 import FormBuilder from "./FormBuilder";
 import useDragDrop from "../hooks/useDragDrop";
 
-const DragDropContext = () => {
-  const [
+const DragDropLayout = () => {
+  const {
     dragState,
     setDragState,
     handleOnDragStart,
     handleOnDragMove,
-    handleDragOnEnd,
-  ] = useDragDrop();
+    handleOnDragEnd,
+  } = useDragDrop();
   return (
     <DndContext
       onDragStart={handleOnDragStart}
-      onDragEnd={handleDragOnEnd}
+      onDragEnd={handleOnDragEnd}
       onDragMove={handleOnDragMove}
     >
       <SideBar isOverFormBuilder={dragState.overId !== null} />
@@ -29,4 +29,4 @@ const DragDropContext = () => {
   );
 };
 
-export default DragDropContext;
+export default DragDropLayout;

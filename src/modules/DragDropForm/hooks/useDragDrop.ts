@@ -8,13 +8,13 @@ import type {
 import { syncElementsWithLocalStorage } from "../../../ultis/storage";
 import { arrayMove } from "@dnd-kit/sortable";
 
-export default function useDragDrop(): [
-  DragState,
-  React.Dispatch<React.SetStateAction<DragState>>,
-  (event: DragStartEvent) => void,
-  (event: DragEndEvent) => void,
-  (event: DragMoveEvent) => void
-] {
+export default function useDragDrop(): {
+  dragState: DragState;
+  setDragState: React.Dispatch<React.SetStateAction<DragState>>;
+  handleOnDragStart: (event: DragStartEvent) => void;
+  handleOnDragMove: (event: DragEndEvent) => void;
+  handleOnDragEnd: (event: DragMoveEvent) => void;
+} {
   const [dragState, setDragState] = useState<DragState>({
     editableElementsIds: [],
     activeId: null,
@@ -33,7 +33,7 @@ export default function useDragDrop(): [
     setDragState((prev) => ({ ...prev, editableElementsIds: elementIds }));
   }, []);
 
-  function handleDragOnEnd(event: DragEndEvent) {
+  function handleOnDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
     setDragState((prev) => ({ ...prev, isFromSidebar: false, overId: null }));
@@ -108,11 +108,11 @@ export default function useDragDrop(): [
     }
   }
 
-  return [
+  return {
     dragState,
     setDragState,
     handleOnDragStart,
     handleOnDragMove,
-    handleDragOnEnd,
-  ];
+    handleOnDragEnd,
+  };
 }

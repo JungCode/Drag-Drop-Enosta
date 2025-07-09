@@ -1,9 +1,9 @@
-import DragDropContext from "../modules/DragDropForm/components/DragDropContext";
+import DragDropLayout from "../modules/DragDropForm/components/DragDropLayout";
 
 const Edit = () => {
   return (
     <div className="bg-gray-100 ">
-      <DragDropContext />
+      <DragDropLayout />
     </div>
   );
 };

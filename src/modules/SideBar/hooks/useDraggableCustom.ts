@@ -7,13 +7,13 @@ import type { Transform } from "@dnd-kit/utilities";
 export default function useDraggableCustom(
   name: string,
   dependencies: React.DependencyList
-): [
-  DraggableAttributes,
-  SyntheticListenerMap | undefined,
-  (element: HTMLElement | null) => void,
-  Transform | null,
-  React.CSSProperties
-] {
+): {
+  attributes: DraggableAttributes;
+  listeners: SyntheticListenerMap | undefined;
+  setNodeRef: (element: HTMLElement | null) => void;
+  transform: Transform | null;
+  style: React.CSSProperties;
+} {
   const elementTypeInfo: KindOfElementType = useMemo(
     () => ({
       id: name + "-" + Date.now().toString(),
@@ -32,5 +32,5 @@ export default function useDraggableCustom(
       : undefined,
   };
 
-  return [attributes, listeners, setNodeRef, transform, style];
+  return { attributes, listeners, setNodeRef, transform, style };
 }

@@ -9,7 +9,7 @@ interface Props {
 }
 
 const SidebarTypeElement = ({ icon, name, isOverFormBuilder }: Props) => {
-  const [attributes, listeners, setNodeRef, transform, style] =
+  const { attributes, listeners, setNodeRef, transform, style } =
     useDraggableCustom(name, [isOverFormBuilder]);
   return (
     <TypeElementOverlayCustom
