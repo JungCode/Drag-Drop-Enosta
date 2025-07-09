@@ -30,7 +30,6 @@ const TypeElementOverlayCustom = ({
       >
         {children}
       </div>
-      {/* Show the overlay at the started position when the element is dragged out  */}
       {isDragged && (
         <div className="absolute top-0 bottom-0 transition-colors bg-blue-600 z-0 opacity-40 text-white p-2 rounded-md flex  items-center gap-1 cursor-pointer hover:bg-blue-400 w-full">
           {children}
