@@ -1,6 +1,9 @@
-import React, { useState } from "react";
-import type { InputType } from "../../types/ElementTypes";
+import React, { useState, useCallback, useMemo } from "react";
+import type { ChangeEvent } from "react";
+import type { InputType, PositionType } from "../../types/ElementTypes";
 import EditableWrapper from "./EditableWrapper";
+import EditFormWrapper from "./EditFormWrapper";
+import FormLabel from "../common/FormLabel";
 
 interface InputProps {
   id: string;
@@ -11,7 +14,7 @@ interface InputProps {
   required?: boolean;
   width?: string;
   canEdit?: boolean;
-  position?: "left" | "center" | "right";
+  position?: PositionType
   onSave?: (updated: InputProps) => void;
   onDelete?: () => void;
 }
@@ -32,21 +35,17 @@ const inputTypes: InputType[] = [
 ];
 
 const getAutoComplete = (name?: string, type?: string): string | undefined => {
-  const normalizedName = name?.toLowerCase() || "";
-  const normalizedType = type?.toLowerCase() || "";
-  if (["email"].includes(normalizedName) || normalizedType === "email")
-    return "email";
-  if (["name", "fullname", "username"].includes(normalizedName)) return "name";
-  if (["password"].includes(normalizedName) || normalizedType === "password")
-    return "new-password";
-  if (["phone", "tel"].includes(normalizedName) || normalizedType === "tel")
-    return "tel";
-  if (["url", "website"].includes(normalizedName) || normalizedType === "url")
-    return "url";
+  const n = name?.toLowerCase() || "";
+  const t = type?.toLowerCase() || "";
+  if (["email"].includes(n) || t === "email") return "email";
+  if (["name", "fullname", "username"].includes(n)) return "name";
+  if (["password"].includes(n) || t === "password") return "new-password";
+  if (["phone", "tel"].includes(n) || t === "tel") return "tel";
+  if (["url", "website"].includes(n) || t === "url") return "url";
   return "off";
 };
 
-const InputElement: React.FC<InputProps> = ({
+const InputElement: React.FC<InputProps> = React.memo(({
   id,
   name = "input",
   title = "Input title",
@@ -71,79 +70,94 @@ const InputElement: React.FC<InputProps> = ({
   };
   const [values, setValues] = useState<InputProps>(initial);
   const [backup, setBackup] = useState<InputProps>(initial);
+  const [errors, setErrors] = useState<{ name?: string }>({});
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setValues((prev) => ({ ...prev, [name]: value }));
-  };
+  const handleChange = useCallback(
+    <K extends keyof InputProps>(key: K, value: InputProps[K]) => {
+      setValues((prev) => ({ ...prev, [key]: value }));
+    },
+    []
+  );
 
-  const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { name, value } = e.target;
+      handleChange(name as keyof InputProps, value);
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
+    },
+    [handleChange]
+  );
+
+  const handleCheckbox = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setValues((prev) => ({ ...prev, required: e.target.checked }));
-  };
+  }, []);
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
+    if (!values.name?.trim()) {
+      setErrors({ name: "This field is required." });
+      return false;
+    }
+    setErrors({});
     setBackup(values);
     onSave?.(values);
-  };
+    return true;
+  }, [values, onSave]);
 
-  const handleDiscard = () => {
+  const handleDiscard = useCallback(() => {
     setValues(backup);
-  };
+    setErrors({});
+  }, [backup]);
 
-  const editView = (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        {/* Title */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Title
-          </label>
+  const editView = useMemo(
+    () => (
+      <EditFormWrapper>
+        <div className="w-full">
+          <FormLabel>Title</FormLabel>
           <input
             name="title"
             value={values.title || ""}
-            onChange={handleChange}
-            className="w-full border border-gray-300 px-3 py-2 rounded"
+            onChange={handleInputChange}
+            className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
           />
         </div>
 
-        {/* Name */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Name
-          </label>
+        <div className="w-full">
+          <FormLabel
+            htmlFor="name"
+            className={errors.name ? "text-red-600" : ""}
+          >
+            Name <span className="text-red-600">*</span>
+          </FormLabel>
           <input
             name="name"
             value={values.name || ""}
-            onChange={handleChange}
-            className="w-full border border-gray-300 px-3 py-2 rounded"
+            onChange={handleInputChange}
+            className={`w-full rounded px-3 py-2 text-sm border ${
+              errors.name ? "border-red-500" : "border-gray-300"
+            }`}
           />
+          {errors.name && (
+            <div className="text-red-500 text-xs mt-1">{errors.name}</div>
+          )}
         </div>
 
-        {/* Placeholder */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Placeholder
-          </label>
+        <div className="w-full">
+          <FormLabel>Placeholder</FormLabel>
           <input
             name="placeholder"
             value={values.placeholder || ""}
-            onChange={handleChange}
-            className="w-full border border-gray-300 px-3 py-2 rounded"
+            onChange={handleInputChange}
+            className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
           />
         </div>
 
-        {/* Type */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Type
-          </label>
+        <div className="w-full">
+          <FormLabel>Type</FormLabel>
           <select
             name="type"
             value={values.type || ""}
-            onChange={handleChange}
-            className="w-full border border-gray-300 px-3 py-2 rounded"
+            onChange={handleInputChange}
+            className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
           >
             <option value="">Select type</option>
             {inputTypes.map((t) => (
@@ -154,16 +168,13 @@ const InputElement: React.FC<InputProps> = ({
           </select>
         </div>
 
-        {/* Width */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Width
-          </label>
+        <div className="w-full">
+          <FormLabel>Width</FormLabel>
           <select
             name="width"
             value={values.width}
-            onChange={handleChange}
-            className="w-full border border-gray-300 px-3 py-2 rounded"
+            onChange={handleInputChange}
+            className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
           >
             {[
               "100%",
@@ -184,61 +195,59 @@ const InputElement: React.FC<InputProps> = ({
           </select>
         </div>
 
-        {/* Position */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Position
-          </label>
+        <div className="w-full">
+          <FormLabel>Position</FormLabel>
           <select
             name="position"
             value={values.position || "left"}
-            onChange={handleChange}
-            className="w-full border border-gray-300 px-3 py-2 rounded"
+            onChange={handleInputChange}
+            className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
           >
             <option value="left">Left</option>
             <option value="center">Center</option>
             <option value="right">Right</option>
           </select>
         </div>
-      </div>
 
-      {/* Required Checkbox */}
-      <label className="flex items-center gap-2 text-sm text-gray-700">
-        <input
-          type="checkbox"
-          checked={values.required || false}
-          onChange={handleCheckbox}
-          className="form-checkbox h-4 w-4"
-        />
-        Required
-      </label>
-    </div>
-  );
-
-  const positionClass =
-    values.position === "center"
-      ? "justify-center"
-      : values.position === "right"
-      ? "justify-end"
-      : "justify-start";
-
-  const preview = (
-    <div className={`space-y-1 p-2 ${positionClass}`}>
-      {values.title && (
-        <label className="block text-sm font-medium text-gray-700">
-          {values.title}
+        <label className="flex items-center gap-2 text-sm text-gray-700 mt-2">
+          <input
+            type="checkbox"
+            checked={values.required || false}
+            onChange={handleCheckbox}
+            className="form-checkbox h-4 w-4"
+          />
+          Required
         </label>
-      )}
-      <input
-        name={values.name}
-        placeholder={values.placeholder}
-        type={values.type}
-        required={values.required}
-        className="w-full border border-gray-300 px-3 py-2 rounded shadow-sm focus:outline-none focus:ring focus:border-blue-300"
-        autoComplete={getAutoComplete(values.name, values.type)}
-      />
-    </div>
+      </EditFormWrapper>
+    ),
+    [values, errors, handleChange, handleCheckbox]
   );
+
+  const preview = useMemo(() => {
+    const positionClass =
+      values.position === "center"
+        ? "justify-center"
+        : values.position === "right"
+        ? "justify-end"
+        : "justify-start";
+
+    return (
+      <div className={`${positionClass}`}>
+        {values.title && 
+        <FormLabel>
+          {values.title} {values.required && <span className="text-red-600">*</span>}
+        </FormLabel>}
+        <input
+          name={values.name}
+          placeholder={values.placeholder}
+          type={values.type}
+          required={values.required}
+          className="w-full border border-gray-300 px-3 py-2 rounded shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+          autoComplete={getAutoComplete(values.name, values.type)}
+        />
+      </div>
+    );
+  }, [values]);
 
   return (
     <EditableWrapper
@@ -254,6 +263,6 @@ const InputElement: React.FC<InputProps> = ({
       {preview}
     </EditableWrapper>
   );
-};
+});
 
 export default InputElement;

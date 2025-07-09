@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { Icon } from "@iconify/react";
 import EditableWrapper from "./EditableWrapper";
+import EditFormWrapper from "./EditFormWrapper";
+import FormLabel from "../common/FormLabel";
+import type { PositionType } from "../../types/ElementTypes";
 
 interface ImageProps {
   name?: string;
@@ -9,14 +12,14 @@ interface ImageProps {
   alt?: string;
   width?: string;
   canEdit?: boolean;
-  position?: "left" | "center" | "right";
+  position?: PositionType;
   shape?: "circle" | "square" | "rectangle";
   onSave?: (updated: ImageProps) => void;
   onDelete?: () => void;
-  id: string
+  id: string;
 }
 
-const ImageElement: React.FC<ImageProps> = ({
+const ImageElement: React.FC<ImageProps> = React.memo(({
   name = "image",
   title = "Title Image",
   src = "https://placehold.co/300x200",
@@ -27,7 +30,7 @@ const ImageElement: React.FC<ImageProps> = ({
   canEdit = false,
   onSave,
   onDelete,
-  id
+  id,
 }) => {
   const [values, setValues] = useState({
     name,
@@ -37,30 +40,45 @@ const ImageElement: React.FC<ImageProps> = ({
     width,
     position,
     shape,
-    id
+    id,
   });
+
   const [backup, setBackup] = useState(values);
+  const [errors, setErrors] = useState<{ name?: string }>({});
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
-  };
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      setValues({ ...values, [e.target.name]: e.target.value });
+      if (e.target.name === "name" && e.target.value.trim()) {
+        setErrors((prev) => ({ ...prev, name: undefined }));
+      }
+    },
+    [values]
+  );
 
-  const handleDiscard = () => {
+  const handleDiscard = useCallback(() => {
     setValues(backup);
-  };
+    setErrors({});
+  }, [backup]);
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
+    const newErrors: { name?: string } = {};
+    if (!values.name.trim()) {
+      newErrors.name = "This field is required.";
+      setErrors(newErrors);
+      return false;
+    }
+
     setBackup(values);
+    setErrors({});
     onSave?.(values);
-  };
+  }, [values, onSave]);
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
     onDelete?.();
-  };
+  }, [onDelete]);
 
-  const getShapeClass = () => {
+  const getShapeClass = useCallback(() => {
     switch (values.shape) {
       case "circle":
         return "rounded-full aspect-square";
@@ -70,123 +88,140 @@ const ImageElement: React.FC<ImageProps> = ({
       default:
         return "aspect-video rounded";
     }
-  };
+  }, [values.shape]);
 
-  const widthOptions = Array.from({ length: 10 }, (_, i) => `${100 - i * 10}%`);
+  const widthOptions = useMemo(
+    () => Array.from({ length: 10 }, (_, i) => `${100 - i * 10}%`),
+    []
+  );
 
-  const editView = (
-    <div className="grid grid-cols-2 gap-4">
-      {/* Title */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Title</label>
-        <input
-          name="title"
-          value={values.title}
-          onChange={handleChange}
-          placeholder="Image title"
-          className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-        />
-      </div>
+  const inputClass =
+    "w-full border border-gray-300 rounded px-3 py-2 text-sm";
 
-      {/* Name */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Form Name</label>
-        <input
-          name="name"
-          value={values.name}
-          onChange={handleChange}
-          placeholder="Form name"
-          className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-        />
-      </div>
-
-      {/* Alt */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Alt Text</label>
-        <input
-          name="alt"
-          value={values.alt}
-          onChange={handleChange}
-          placeholder="Alt text"
-          className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-        />
-      </div>
-
-      {/* Image URL + Upload */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Image URL</label>
-        <input
-          name="src"
-          value={values.src}
-          onChange={handleChange}
-          placeholder="Image URL"
-          className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-        />
-        <label className="mt-2 flex items-center gap-2 cursor-pointer text-blue-600 text-sm hover:underline">
-          <Icon icon="mdi:upload" className="text-base" />
-          <span>Upload Image</span>
+  const editView = useMemo(
+    () => (
+      <EditFormWrapper>
+        {/* Title */}
+        <div>
+          <FormLabel>Title</FormLabel>
           <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                const url = URL.createObjectURL(file);
-                setValues((prev) => ({ ...prev, src: url }));
-              }
-            }}
-            className="hidden"
+            name="title"
+            value={values.title}
+            onChange={handleChange}
+            placeholder="Image title"
+            className={inputClass}
           />
-        </label>
-      </div>
+        </div>
 
-      {/* Width */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Width</label>
-        <select
-          name="width"
-          value={values.width}
-          onChange={handleChange}
-          className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-        >
-          {widthOptions.map((w) => (
-            <option key={w} value={w}>
-              {w}
-            </option>
-          ))}
-        </select>
-      </div>
+        {/* Name */}
+        <div>
+          <FormLabel 
+            className={errors.name ? "text-red-600" : ""}
+            htmlFor="name"
+          >
+            Name <span className="text-red-600">*</span>
+            </FormLabel>
+          <input
+            name="name"
+            value={values.name}
+            onChange={handleChange}
+            placeholder="Form name"
+            className={`${inputClass} ${errors.name ? "border-red-500" : ""}`}
+          />
+          {errors.name && (
+            <p className="text-xs text-red-500 mt-1">{errors.name}</p>
+          )}
+        </div>
 
-      {/* Position */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Align</label>
-        <select
-          name="position"
-          value={values.position}
-          onChange={handleChange}
-          className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-        >
-          <option value="left">Left</option>
-          <option value="center">Center</option>
-          <option value="right">Right</option>
-        </select>
-      </div>
+        {/* Alt */}
+        <div>
+          <FormLabel>Alt Text</FormLabel>
+          <input
+            name="alt"
+            value={values.alt}
+            onChange={handleChange}
+            placeholder="Alt text"
+            className={inputClass}
+          />
+        </div>
 
-      {/* Shape */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Shape</label>
-        <select
-          name="shape"
-          value={values.shape}
-          onChange={handleChange}
-          className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-        >
-          <option value="rectangle">Rectangle</option>
-          <option value="square">Square</option>
-          <option value="circle">Circle</option>
-        </select>
-      </div>
-    </div>
+        {/* Width */}
+        <div>
+          <FormLabel>Width</FormLabel>
+          <select
+            name="width"
+            value={values.width}
+            onChange={handleChange}
+            className={inputClass}
+          >
+            {widthOptions.map((w) => (
+              <option key={w} value={w}>
+                {w}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Position */}
+        <div>
+          <FormLabel>Align</FormLabel>
+          <select
+            name="position"
+            value={values.position}
+            onChange={handleChange}
+            className={inputClass}
+          >
+            <option value="left">Left</option>
+            <option value="center">Center</option>
+            <option value="right">Right</option>
+          </select>
+        </div>
+
+        {/* Shape */}
+        <div>
+          <FormLabel>Shape</FormLabel>
+          <select
+            name="shape"
+            value={values.shape}
+            onChange={handleChange}
+            className={inputClass}
+          >
+            <option value="rectangle">Rectangle</option>
+            <option value="square">Square</option>
+            <option value="circle">Circle</option>
+          </select>
+        </div>
+
+        {/* Image URL + Upload */}
+        <div>
+          <FormLabel>Image URL</FormLabel>
+          <input
+            name="src"
+            value={values.src}
+            onChange={handleChange}
+            placeholder="Image URL"
+            className={inputClass}
+          />
+          <label className="mt-2 flex items-center gap-2 cursor-pointer text-blue-600 text-sm hover:underline">
+            <Icon icon="mdi:upload" className="text-base" />
+            <span>Upload Image</span>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  const url = URL.createObjectURL(file);
+                  setValues((prev) => ({ ...prev, src: url }));
+                }
+              }}
+              className="hidden"
+            />
+          </label>
+        </div>
+      </EditFormWrapper>
+    ),
+    [values, handleChange, errors, widthOptions]
   );
 
   return (
@@ -214,6 +249,6 @@ const ImageElement: React.FC<ImageProps> = ({
       </div>
     </EditableWrapper>
   );
-};
+});
 
 export default ImageElement;
