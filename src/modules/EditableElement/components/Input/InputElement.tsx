@@ -8,9 +8,8 @@ import { getJustifyClass } from "../../../../ultis/cssClassHelpers";
 
 const defaultValues: Required<Pick<
   InputProps,
-  "name" | "title" | "type" | "placeholder" | "required" | "width" | "position"
+  "title" | "type" | "placeholder" | "required" | "width" | "position"
 >> = {
-  name: "input",
   title: "Input title",
   type: "text",
   placeholder: "",
@@ -36,14 +35,15 @@ const InputElement: React.FC<InputProps> = React.memo((props) => {
     onSave,
     onDelete,
     canEdit = false,
+    name,
     ...rest
   } = props;
 
   const merged: InputProps = {
     id,
+    name,
     onSave,
     onDelete,
-    canEdit,
     ...defaultValues,
     ...rest,
   };

@@ -29,17 +29,7 @@ export default function useDragHandlers(
 
     const oldIndex = dragState.editableElementsIds.indexOf(active.id as string);
     const newIndex = dragState.editableElementsIds.indexOf(over.id as string);
-    let movedArray: string[];
-
-    if (oldIndex === -1 && typeof active.id === "string") {
-      movedArray = [
-        ...dragState.editableElementsIds.slice(0, newIndex),
-        active.id,
-        ...dragState.editableElementsIds.slice(newIndex),
-      ];
-    } else {
-      movedArray = arrayMove(dragState.editableElementsIds, oldIndex, newIndex);
-    }
+    const movedArray = arrayMove(dragState.editableElementsIds, oldIndex, newIndex);
     syncElementsWithLocalStorage(movedArray);
     setDragState((prev) => ({ ...prev, editableElementsIds: movedArray }));
   }

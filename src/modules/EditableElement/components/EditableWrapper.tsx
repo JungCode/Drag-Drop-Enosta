@@ -31,9 +31,13 @@ const EditableWrapper: React.FC<EditableWrapperProps> = React.memo(
       setNodeRef,
     } = useEditableWrapper({ id, canEdit, onSave, onDiscard });
 
-    const wrapperClass = `relative p-2 rounded border transition-colors duration-300 border-dashed flex flex-col justify-center cursor-pointer ${
-      canEdit && isHovered ? " border-gray-400" : "border-transparent "
-    } ${getPositionClass(position)}`;
+    const cursorClass = canEdit ? "cursor-pointer" : "";
+    const borderClass =
+      canEdit && isHovered ? "border-gray-400" : "border-transparent";
+
+    const wrapperClass = `relative p-2 rounded border transition-colors duration-300 border-dashed flex flex-col justify-center ${borderClass} ${cursorClass} ${getPositionClass(
+      position
+    )}`;
 
     if (isEditing && canEdit) {
       return (

@@ -61,9 +61,4 @@ const RenderElementItem: React.FC<RenderElementItemProps> = ({
   }
 };
 
-export default React.memo(RenderElementItem, (prev, next) => {
-  return (
-    prev.item.id === next.item.id &&
-    prev.canEdit === next.canEdit
-  );
-});
+export default React.memo(RenderElementItem);
