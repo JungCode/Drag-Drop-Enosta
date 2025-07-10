@@ -66,14 +66,14 @@ export default function useDragHandlers(
           ...dragState.editableElementsIds,
           dragState.activeId as string,
         ];
-        const overIndex = ghostArray.indexOf(over.id as string);
-        if (overIndex !== -1) {
-          ghostArray.splice(overIndex, 0, dragState.activeId as string);
-        }
+        const scrollY = window.scrollY;
         setDragState((prev) => ({
           ...prev,
           editableElementsIds: ghostArray,
         }));
+        requestAnimationFrame(() => {
+          window.scrollTo({ top: scrollY });
+        });
       }
 
       setDragState((prev) => ({ ...prev, overId: active.id as string }));
