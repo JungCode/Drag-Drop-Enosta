@@ -16,12 +16,11 @@ export function saveElements(data: ElementItem[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-export const getDefaultData = (type: ElementType, count: number) => {
+export const getDefaultData = (type: ElementType) => {
   switch (type) {
     case "Button":
       return {
         content: "Button",
-        name: `submitButton-${count}`,
         type: "submit",
         position: "left" as PositionType,
       };
@@ -29,7 +28,6 @@ export const getDefaultData = (type: ElementType, count: number) => {
       return {
         title: "Heading",
         size: 2,
-        name: `title-${count}`,
         position: "left" as PositionType,
         color: "#000000",
       };
@@ -111,7 +109,7 @@ export const syncElementsWithLocalStorage = (ids: string[]) => {
       type,
       data: {
         name: `${type}-${count}`,
-        ...getDefaultData(type, count),
+        ...getDefaultData(type),
       },
     };
   });
