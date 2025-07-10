@@ -27,8 +27,6 @@ const RenderElementItem: React.FC<RenderElementItemProps> = ({
     onDelete,
   };
 
-  console.log('rerender')
-
   switch (item.type as ElementType) {
     case ELEMENT_TYPES.Heading:
       return <HeadingElement {...commonProps} {...item.data} />;
