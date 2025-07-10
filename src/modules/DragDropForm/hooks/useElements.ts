@@ -31,7 +31,7 @@ export default function useElements(
                 id: newItemId,
                 type: newItemId.split("-")[0] as ElementType,
                 data: {
-                  ...getDefaultData(type, count),
+                  ...getDefaultData(type),
                   name: `${type}-${count}`,
                 },
               },
