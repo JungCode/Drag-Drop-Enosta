@@ -38,10 +38,13 @@ const EditableWrapper: React.FC<EditableWrapperProps> = React.memo(
     if (isEditing && canEdit) {
       return (
         <div
+          style={{ width, ...style }}
+          ref={setNodeRef}
+          {...attributes}
+          id={id}
           className={`border border-gray-400 border-dashed p-4 rounded space-y-4 transition-all duration-300 ${getPositionClass(
             position
           )}`}
-          style={{ width }}
         >
           {editView}
           <div className="flex flex-wrap gap-2 mt-4 justify-end">
