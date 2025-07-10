@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useEditableWrapper } from "../hooks/useEditableWrapper";
 import type { EditableWrapperProps } from "../types/EditableWrapper.type";
 import { getPositionClass } from "../../../ultis/cssClassHelpers";
+import DragHandlerButton from "./DragHandlerButton";
 
 const EditableWrapper: React.FC<EditableWrapperProps> = React.memo(
   ({
@@ -37,7 +38,9 @@ const EditableWrapper: React.FC<EditableWrapperProps> = React.memo(
     if (isEditing && canEdit) {
       return (
         <div
-          className={`border border-gray-400 border-dashed p-4 rounded space-y-4 transition-all duration-300 ${getPositionClass(position)}`}
+          className={`border border-gray-400 border-dashed p-4 rounded space-y-4 transition-all duration-300 ${getPositionClass(
+            position
+          )}`}
           style={{ width }}
         >
           {editView}
@@ -72,14 +75,14 @@ const EditableWrapper: React.FC<EditableWrapperProps> = React.memo(
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        onDoubleClick={handleDoubleClick}
+        onClick={handleDoubleClick}
         className={wrapperClass}
-        style={{ width, ...style, position: "relative", zIndex: 9999998 }}
+        style={{ width, ...style }}
         ref={setNodeRef}
         {...attributes}
-        {...listeners}
         id={id}
       >
+        <DragHandlerButton isHovered={isHovered} listeners={listeners} />
         {children}
       </div>
     );

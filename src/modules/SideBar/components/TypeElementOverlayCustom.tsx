@@ -31,7 +31,7 @@ const TypeElementOverlayCustom = ({
         {children}
       </div>
       {isDragged && (
-        <div className="absolute top-0 bottom-0 transition-colors bg-blue-600 z-0 opacity-40 text-white p-2 rounded-md flex  items-center gap-1 cursor-pointer hover:bg-blue-400 w-full">
+        <div className="absolute top-0 bottom-0 transition-colors bg-blue-600 z-0 opacity-40 text-white p-2 rounded-md flex flex-col justify-center items-center gap-1 cursor-pointer hover:bg-blue-400 w-full">
           {children}
         </div>
       )}
