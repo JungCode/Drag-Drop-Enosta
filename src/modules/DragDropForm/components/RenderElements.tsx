@@ -1,8 +1,9 @@
 import { useMemo } from "react";
 import { type DragState } from "../../../types/ElementTypes";
-import RenderElementItems from "../../../components/elements/RenderElementItems";
 import useElements from "../hooks/useElements";
 import useEditHandlers from "../hooks/useEditHandlers";
+import { useLocation } from "react-router-dom";
+import RenderElementItems from "../../EditableElement/components/RenderElementItems";
 
 const RenderElemments = ({
   items = [],
@@ -16,6 +17,8 @@ const RenderElemments = ({
     setElements,
     setDragState
   );
+  const location = useLocation();
+  const isActive = (path: string) => location.pathname === path;
 
   const renderedElements = useMemo(
     () =>
@@ -23,7 +26,7 @@ const RenderElemments = ({
         <RenderElementItems
           key={item.id}
           item={item}
-          canEdit
+          canEdit={isActive("/")}
           onSave={(updated) => handleOnSave(item.id, updated)}
           onDelete={() => handleOnDelete(item.id)}
         />

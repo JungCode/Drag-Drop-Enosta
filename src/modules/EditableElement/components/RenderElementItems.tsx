@@ -1,25 +1,18 @@
 import React from "react";
-import HeadingElement from "./HeadingElement";
-import InputElement from "./InputElement";
-import ButtonElement from "./ButtonElement";
-import ImageElement from "./ImageElement";
-import SelectElement from "./SelectElement";
+import HeadingElement from "./Heading/HeadingElement";
+import ButtonElement from "./Button/ButtonElement";
+import ImageElement from "./Image/ImageElement";
+import SelectElement from "./Selection/SelectElement";
 
 import {
   type ButtonData,
-  type ElementItem,
   type InputData,
   type SelectData,
   type ElementType,
   ELEMENT_TYPES,
-} from "../../types/ElementTypes";
-
-interface RenderElementItemProps {
-  item: ElementItem;
-  canEdit?: boolean;
-  onSave?: (data: Partial<ElementItem["data"]>) => void;
-  onDelete?: () => void;
-}
+} from "../../../types/ElementTypes";
+import InputElement from "./Input/InputElement";
+import type { RenderElementItemProps } from "../types/RenderElementItems.type";
 
 const RenderElementItem: React.FC<RenderElementItemProps> = ({
   item,
@@ -34,15 +27,21 @@ const RenderElementItem: React.FC<RenderElementItemProps> = ({
     onDelete,
   };
 
+  console.log('rerender')
+
   switch (item.type as ElementType) {
     case ELEMENT_TYPES.Heading:
       return <HeadingElement {...commonProps} {...item.data} />;
 
     case ELEMENT_TYPES.Input:
-      return <InputElement {...commonProps} {...(item.data as InputData)} />;
+      return (
+        <InputElement {...commonProps} {...(item.data as InputData)} />
+      );
 
     case ELEMENT_TYPES.Button:
-      return <ButtonElement {...commonProps} {...(item.data as ButtonData)} />;
+      return (
+        <ButtonElement {...commonProps} {...(item.data as ButtonData)} />
+      );
 
     case ELEMENT_TYPES.Image:
       return <ImageElement {...commonProps} {...(item.data || {})} />;
@@ -53,7 +52,8 @@ const RenderElementItem: React.FC<RenderElementItemProps> = ({
           {...commonProps}
           data={{
             ...(item.data as SelectData),
-            options: "options" in item.data ? item.data.options ?? [] : [],
+            options:
+              "options" in item.data ? item.data.options ?? [] : [],
           }}
         />
       );
@@ -66,7 +66,6 @@ const RenderElementItem: React.FC<RenderElementItemProps> = ({
 export default React.memo(RenderElementItem, (prev, next) => {
   return (
     prev.item.id === next.item.id &&
-    JSON.stringify(prev.item.data) === JSON.stringify(next.item.data) &&
     prev.canEdit === next.canEdit
   );
 });

@@ -20,6 +20,7 @@ export interface HeadingData {
   size?: 1 | 2 | 3 | 4 | 5;
   name?: string;
   position?: PositionType;
+  width?: string;
   color?: string;
 }
 

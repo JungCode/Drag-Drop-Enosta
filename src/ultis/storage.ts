@@ -39,6 +39,12 @@ export const syncElementsWithLocalStorage = (ids: string[]) => {
     elementMap.set(el.id, el);
   });
 
+  const typeCountMap = new Map<string, number>();
+  oldElements.forEach((el) => {
+    const count = typeCountMap.get(el.type) || 0;
+    typeCountMap.set(el.type, count + 1);
+  });
+
   const updatedElements = ids.map((id) => {
     if (elementMap.has(id)) {
       return elementMap.get(id)!;
@@ -46,12 +52,18 @@ export const syncElementsWithLocalStorage = (ids: string[]) => {
 
     const type = id.split("-")[0];
 
+    const count = (typeCountMap.get(type) || 0) + 1;
+    typeCountMap.set(type, count);
+
     return {
       id,
       type,
-      data: {},
+      data: {
+        name: `${type}-${count}`,
+      },
     };
   });
 
   localStorage.setItem("elements", JSON.stringify(updatedElements));
 };
+

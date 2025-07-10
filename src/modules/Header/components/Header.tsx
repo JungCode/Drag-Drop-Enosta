@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 
-const Headers = () => {
+const Header = () => {
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
 
@@ -28,4 +28,4 @@ const Headers = () => {
   );
 };
 
-export default Headers;
+export default Header;
