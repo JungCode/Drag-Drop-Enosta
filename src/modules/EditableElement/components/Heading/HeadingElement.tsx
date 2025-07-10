@@ -14,7 +14,7 @@ const HeadingElement: React.FC<HeadingProps> = React.memo((props) => {
     id,
     title = "Heading",
     size = 2,
-    name = "title",
+    name,
     position = "left",
     color = "#000000",
     canEdit = false,

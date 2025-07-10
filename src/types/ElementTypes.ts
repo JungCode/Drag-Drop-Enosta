@@ -87,6 +87,7 @@ export type ElementData =
 
 export interface ElementItem {
   id: string;
+  name?: string;
   type: ElementType;
   data: ElementData;
 }

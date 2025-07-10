@@ -54,7 +54,7 @@ const ButtonElement: React.FC<ButtonProps> = React.memo((props) => {
         <button
           type={values.type}
           name={values.name}
-          className="w-full max-w-xs px-6 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
+          className="w-full max-w-xs px-6 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 cursor-pointer transition"
         >
           {values.content}
         </button>
