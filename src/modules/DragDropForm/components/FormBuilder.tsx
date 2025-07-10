@@ -25,7 +25,9 @@ const FormBuilder = ({
     <div className="ml-52 px-52 py-5">
       <ul
         ref={setNodeRef}
-        className="bg-white mt-14 min-h-screen p-6 rounded-xl "
+        className={`bg-white mt-14 min-h-screen border-gray-400 p-6 rounded-xl border-dashed ${
+          idsList.length === 0 ? "border" : ""
+        }`}
       >
         <BuilderSortableList
           items={idsList}

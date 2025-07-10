@@ -34,6 +34,9 @@ const BuilderSortableList = ({
         <DragOverlay>
           {shouldShowOverlay ? <EditableElementOverlay id={activeId} /> : null}
         </DragOverlay>
+        {items.length === 0 && (
+          <p className="text-4xl text-center text-gray-400">Empty</p>
+        )}
       </SortableContext>
     </div>
   );

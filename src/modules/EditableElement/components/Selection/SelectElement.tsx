@@ -9,9 +9,8 @@ const SelectElement: React.FC<SelectProps> = React.memo(
   ({ id, data = {}, canEdit = false, onSave, onDelete }) => {
     const initialData: SelectData = useMemo(
       () => ({
-        name: "select",
         title: "Title Select",
-        placeholder: "",
+        placeholder: "Please select an option",
         required: false,
         width: "100%",
         position: "left",

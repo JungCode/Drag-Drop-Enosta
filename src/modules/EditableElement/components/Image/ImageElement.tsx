@@ -5,12 +5,11 @@ import { useImageEditor } from "../../hooks/useImageEditor";
 import type { ImageProps } from "../../types/Image.type";
 
 const defaultValues: Required<Pick<ImageProps,
-  "name" | "title" | "src" | "alt" | "width" | "position" | "shape">
+   "title" | "src" | "alt" | "width" | "position" | "shape">
 > = {
-  name: "default-image",
   title: "Title Image",
   src: "https://placehold.co/300x200",
-  alt: "Mô tả gì đó đi",
+  alt: "Description Image",
   width: "50%",
   position: "left",
   shape: "rectangle",
@@ -22,14 +21,15 @@ const ImageElement: React.FC<ImageProps> = React.memo((props) => {
     onSave,
     onDelete,
     canEdit = false,
+    name,
     ...rest
   } = props;
 
   const mergedProps: ImageProps = {
     id,
+    name,
     onSave,
     onDelete,
-    canEdit,
     ...defaultValues,
     ...rest,
   };
